@@ -1,0 +1,11 @@
+ktor:
+    application:
+        modules:
+            - tech.fika.compose.multiplatform.playground.ApplicationKt.module
+    deployment:
+        port: 8000
+postgres:
+  url: "jdbc:postgresql://localhost:5432/"
+  username: postgres
+  password: postgres
+  driver: "org.postgresql.Driver"

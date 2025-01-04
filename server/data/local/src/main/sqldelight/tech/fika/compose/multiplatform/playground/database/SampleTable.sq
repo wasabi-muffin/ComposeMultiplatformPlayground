@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS TodoTable (
+    id TEXT PRIMARY KEY,
+    description TEXT NOT NULL
+);
+
+insert:
+INSERT INTO TodoTable
+VALUES ?;
+
+getAll:
+SELECT * FROM TodoTable;
+
+delete:
+DELETE FROM TodoTable
+WHERE id = ?;
+
+deleteAll:
+DELETE FROM TodoTable;
+
+update:
+UPDATE TodoTable
+SET description = ?
+WHERE id = ?;
