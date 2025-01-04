@@ -16,7 +16,6 @@ fun <A : Action, E : Event, S : State> stateMachine(
     builder: StateMachineBuilder<A, E, S>.() -> Unit,
 ) = StateMachineBuilder<A, E, S>().apply(builder).build()
 
-
 fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     initialState: S? = null,
     lifecycle: Lifecycle? = null,
@@ -29,11 +28,11 @@ fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     lifecycle = lifecycle,
     coroutineScope = coroutineScope,
 ) {
-    add(stateListener = StateMachineStateListener(this@store))
-    add(lifecycleListener = StateMachineLifecycleListener(this@store))
-    add(jobHandler = this@store.jobHandler)
-    add(messageManager = this@store.messageManager)
-    add(messageHandler = this@store.messageHandler)
-    add(interceptors)
+    +StateMachineStateListener(this@store)
+    +StateMachineLifecycleListener(this@store)
+    +this@store.jobHandler
+    +messageManager
+    +(messageHandler ?: this@store.messageHandler)
+    +interceptors
     storeConfiguration()
 }

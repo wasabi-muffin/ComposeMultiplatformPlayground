@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.build.kmp.ios)
     alias(libs.plugins.build.kmp.wasm)
     alias(libs.plugins.build.kmp.desktop)
+    alias(libs.plugins.build.compose.kmp)
     alias(libs.plugins.build.koin.kmp)
 }
 

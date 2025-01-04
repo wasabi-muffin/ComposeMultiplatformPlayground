@@ -1,5 +1,6 @@
 package tech.fika.compose.multiplatform.playground.setup.presentation
 
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
 import tech.fika.compose.multiplatform.playground.domain.core.invoke

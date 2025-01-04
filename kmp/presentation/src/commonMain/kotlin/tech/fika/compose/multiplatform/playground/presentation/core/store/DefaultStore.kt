@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -26,9 +25,9 @@ class DefaultStore<A : Action, E : Event, S : State>(
     storeConfiguration: StoreConfiguration.Builder<A, E, S>.() -> Unit,
 ) : Store<A, E, S> {
     private val mutex: Mutex = Mutex()
-    private val stateFlow = MutableStateFlow(initialState)
-    private val eventFlow = MutableStateFlow(emptyList<E>())
     private val configuration = StoreConfiguration.Builder<A, E, S>().apply(storeConfiguration).build()
+    private val stateFlow = MutableStateFlow(initialState)
+    private val eventFlow = MutableStateFlow<E?>(null)
     private val lifecycleObserver = configuration.lifecycleListener.toLifecycleObserver(
         getState = { currentState },
         dispatch = ::dispatch
@@ -36,7 +35,7 @@ class DefaultStore<A : Action, E : Event, S : State>(
 
     override val state = stateFlow
     override val currentState: S get() = stateFlow.value
-    override val event = eventFlow.map { it.firstOrNull() }
+    override val event get() = eventFlow
 
     init {
         lifecycle?.addObserver(lifecycleObserver)
@@ -70,12 +69,12 @@ class DefaultStore<A : Action, E : Event, S : State>(
     }
 
     override fun process(event: E) {
-        coroutineScope.launch { eventFlow.emit(eventFlow.value.filterNot { it == event }) }
+        coroutineScope.launch { eventFlow.emit(null) }
     }
 
     private fun send(event: E) {
         configuration.interceptors.forEach { it.interceptEvent(event) }
-        coroutineScope.launch { eventFlow.emit(eventFlow.value + event) }
+        coroutineScope.launch { eventFlow.emit(value = event) }
     }
 
     override fun dispose() {
