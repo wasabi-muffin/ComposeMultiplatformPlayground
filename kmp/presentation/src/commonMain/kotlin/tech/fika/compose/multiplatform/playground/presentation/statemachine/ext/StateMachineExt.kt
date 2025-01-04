@@ -1,4 +1,4 @@
-package tech.fika.compose.multiplatform.playground.presentation.statemachine.components
+package tech.fika.compose.multiplatform.playground.presentation.statemachine.ext
 
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
@@ -11,6 +11,9 @@ import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 import tech.fika.compose.multiplatform.playground.presentation.core.store.StoreConfiguration
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.builders.StateMachineBuilder
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineLifecycleListener
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineStateListener
 
 fun <A : Action, E : Event, S : State> stateMachine(
     builder: StateMachineBuilder<A, E, S>.() -> Unit,

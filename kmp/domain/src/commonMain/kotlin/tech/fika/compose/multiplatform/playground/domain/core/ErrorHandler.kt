@@ -6,10 +6,6 @@ fun interface ErrorHandler : ErrorHandlerScope {
     fun handle(error: Throwable): DomainError
 }
 
-fun interface ErrorHandler2 : ErrorHandlerScope {
-    fun Throwable.map(): DomainError
-}
-
 inline operator fun <T> ErrorHandler.invoke(
     block: ErrorHandlerScope.() -> T,
 ): DomainResult<T> = runCatching(block).fold(

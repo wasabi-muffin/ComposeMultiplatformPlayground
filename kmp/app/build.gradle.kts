@@ -25,6 +25,7 @@ kotlin {
             implementation(projects.kmp.domain)
             implementation(projects.kmp.presentation)
             implementation(projects.kmp.data)
+            implementation(projects.kmp.feature.initial)
             implementation(projects.kmp.feature.setup)
         }
         androidMain.dependencies {

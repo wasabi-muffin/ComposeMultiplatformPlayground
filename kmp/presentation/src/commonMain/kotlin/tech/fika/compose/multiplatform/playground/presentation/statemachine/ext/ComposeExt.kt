@@ -15,7 +15,6 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Eve
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.store.StoreConfiguration
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.store
 
 @Immutable
 data class Contract<A : Action, E : Event, S : State>(

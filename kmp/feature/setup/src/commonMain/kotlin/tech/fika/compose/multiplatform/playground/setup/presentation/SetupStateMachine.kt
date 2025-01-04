@@ -1,21 +1,17 @@
 package tech.fika.compose.multiplatform.playground.setup.presentation
 
-import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
 import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.stateMachine
 
-typealias SetupStateMachine = StateMachine<SetupAction, SetupEvent, SetupState>
-
-@Single
-internal fun setupStateMachine(
+@Single(binds = [SetupStateMachine::class])
+class SetupStateMachine(
     getPlatformUseCase: GetPlatformUseCase,
     errorHandler: ErrorHandler,
-): SetupStateMachine = stateMachine {
+) : StateMachine<SetupAction, SetupEvent, SetupState>({
     initialState { SetupState.Initial }
 
     state<SetupState.Initial> {
@@ -52,4 +48,4 @@ internal fun setupStateMachine(
             }
         }
     }
-}
+})
