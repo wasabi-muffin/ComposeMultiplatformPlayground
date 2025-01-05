@@ -4,7 +4,6 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Act
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.JobHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.builders.Matcher
 
@@ -15,5 +14,4 @@ data class RootNode<A : Action, E : Event, S : State>(
     internal val interceptorNode: InterceptorNode<A, E, S>,
     internal val jobHandler: JobHandler,
     internal val messageManager: MessageManager?,
-    internal val messageHandler: MessageHandler<A>?,
 )

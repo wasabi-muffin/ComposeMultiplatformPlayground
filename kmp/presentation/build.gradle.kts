@@ -12,7 +12,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.log.kermit)
         }
         all {

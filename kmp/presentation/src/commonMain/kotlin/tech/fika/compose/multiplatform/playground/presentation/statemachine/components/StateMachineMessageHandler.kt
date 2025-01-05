@@ -7,22 +7,15 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.MessageNode
 
-class StateMachineMessageListener<A : Action, E : Event, S : State>(
+class StateMachineMessageHandler<A : Action, E : Event, S : State>(
     private val stateMachine: StateMachine<A, E, S>,
 ) : MessageHandler<A, S> {
     override fun handle(message: Message, state: S, dispatch: (A) -> Unit) = stateMachine.stateMap
         .filterKeys { key -> key.matches(value = state) }
         .values
         .flatMap { stateNode -> stateNode.messageMap.entries }
-        .find { (key, _) ->
-            key.matches(value = message)
-        }
+        .find { entry -> entry.key.matches(value = message) }
         ?.value
-        ?.invoke(
-            MessageNode(
-                message = message,
-                state = state,
-                dispatch = dispatch,
-            )
-        ) ?: Unit
+        ?.invoke(MessageNode(message = message, state = state, dispatch = dispatch))
+        ?: Unit
 }

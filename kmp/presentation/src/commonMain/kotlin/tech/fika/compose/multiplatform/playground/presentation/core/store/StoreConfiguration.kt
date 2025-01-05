@@ -12,19 +12,19 @@ import tech.fika.compose.multiplatform.playground.presentation.core.tools.Messag
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
 
 data class StoreConfiguration<A : Action, E : Event, S : State>(
-    val stateListener: StateListener<A, S>,
-    val lifecycleListener: LifecycleListener<A, S>,
     val jobHandler: JobHandler,
+    val stateListener: StateListener<A, S>?,
+    val lifecycleListener: LifecycleListener<A, S>?,
     val messageManager: MessageManager?,
-    val messageHandler: MessageHandler<A>?,
+    val messageHandler: MessageHandler<A, S>?,
     val interceptors: List<Interceptor<A, E, S>>,
 ) {
     class Builder<A : Action, E : Event, S : State> {
+        private var jobHandler: JobHandler = DefaultJobHandler()
         private var stateListener: StateListener<A, S>? = null
         private var lifecycleListener: LifecycleListener<A, S>? = null
-        private var jobHandler: JobHandler? = null
         private var messageManager: MessageManager? = null
-        private var messageHandler: MessageHandler<A>? = null
+        private var messageHandler: MessageHandler<A, S>? = null
         private var interceptors: MutableList<Interceptor<A, E, S>> = mutableListOf()
 
         fun add(stateListener: StateListener<A, S>) {
@@ -43,7 +43,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
             this.messageManager = messageManager
         }
 
-        fun add(messageHandler: MessageHandler<A>?) {
+        fun add(messageHandler: MessageHandler<A, S>?) {
             this.messageHandler = messageHandler
         }
 
@@ -54,9 +54,9 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
         fun add(interceptors: List<Interceptor<A, E, S>>) = add(*interceptors.toTypedArray())
 
         fun build(): StoreConfiguration<A, E, S> = StoreConfiguration(
-            stateListener = stateListener ?: StateListener.default(),
-            lifecycleListener = lifecycleListener ?: LifecycleListener.default(),
-            jobHandler = jobHandler ?: DefaultJobHandler(),
+            jobHandler = jobHandler,
+            stateListener = stateListener,
+            lifecycleListener = lifecycleListener,
             messageManager = messageManager,
             messageHandler = messageHandler,
             interceptors = interceptors,

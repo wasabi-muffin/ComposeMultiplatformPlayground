@@ -18,7 +18,7 @@ class ComposeDesktopPlugin : Plugin<Project> {
 
         dependencies {
             implementation(libs.library("koin-compose"))
-            implementation(libs.library("androidx-lifecycle-runtime-compose"))
+            implementation(libs.library("compose-lifecycle-runtime"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)

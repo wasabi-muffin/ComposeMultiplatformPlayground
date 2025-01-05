@@ -19,7 +19,10 @@ class ComposeKmpPlugin : Plugin<Project> {
             sourceSets {
                 commonMain.dependencies {
                     implementation(libs.library("koin-compose"))
-                    implementation(libs.library("androidx-lifecycle-runtime-compose"))
+                    implementation(libs.library("koin-compose-viewmodel"))
+                    implementation(libs.library("koin-compose-viewmodel-navigation"))
+                    implementation(libs.library("compose-lifecycle-runtime"))
+                    implementation(libs.library("compose-lifecycle-viewmodel"))
                     implementation(compose.runtime)
                     implementation(compose.foundation)
                     implementation(compose.material)

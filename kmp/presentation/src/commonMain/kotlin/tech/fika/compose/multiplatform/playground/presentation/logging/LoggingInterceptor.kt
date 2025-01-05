@@ -3,6 +3,7 @@ package tech.fika.compose.multiplatform.playground.presentation.logging
 import tech.fika.compose.multiplatform.playground.presentation.core.components.Interceptor
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
 class LoggingInterceptor<A : Action, E : Event, S : State>(
@@ -20,5 +21,9 @@ class LoggingInterceptor<A : Action, E : Event, S : State>(
 
     override fun interceptState(state: S) {
         logger.log(level = level, tag = tag) { "State: $state" }
+    }
+
+    override fun interceptMessage(message: Message) {
+        logger.log(level = level, tag = tag) { "Message: $message" }
     }
 }

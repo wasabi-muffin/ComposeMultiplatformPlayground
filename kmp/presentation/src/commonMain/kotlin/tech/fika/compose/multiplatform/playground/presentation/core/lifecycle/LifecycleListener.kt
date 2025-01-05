@@ -14,18 +14,6 @@ interface LifecycleListener<A : Action, S : State> : DefaultLifecycleObserver {
     fun onStop(state: S, dispatch: (A) -> Unit) = Unit
     fun onDestroy() = Unit
 
-    fun toLifecycleObserver(getState: () -> S, dispatch: (A) -> Unit): LifecycleObserver =
-        object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) = onCreate(getState(), dispatch)
-            override fun onStart(owner: LifecycleOwner) = onStart(getState(), dispatch)
-            override fun onResume(owner: LifecycleOwner) = onResume(getState(), dispatch)
-            override fun onPause(owner: LifecycleOwner) = onPause(getState(), dispatch)
-            override fun onStop(owner: LifecycleOwner) = onStop(getState(), dispatch)
-            override fun onDestroy(owner: LifecycleOwner) {
-                onDestroy()
-            }
-        }
-
     companion object {
         fun <A : Action, S : State> default() = object : LifecycleListener<A, S> {}
     }

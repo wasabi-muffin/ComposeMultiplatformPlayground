@@ -12,28 +12,22 @@ import androidx.compose.ui.Modifier
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.Res
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.koinInject
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
-import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.contract
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.createContract
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupAction
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupEvent
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupState
-import tech.fika.compose.multiplatform.playground.setup.presentation.SetupStateMachine
 
 @Composable
 fun SetupScreen(
-    stateMachine: SetupStateMachine,
-    route: SetupRoute,
+    viewModel: SetupViewModel,
     navigator: SetupNavigator,
 ) {
-    val (state, dispatch) = contract(
-        stateMachine = stateMachine,
-        initialState = SetupState.Initial(name = route.name)
-    ).handleEvents {
-        when (it) {
-            SetupEvent.NavigateBack -> navigator.back()
+    val (state, dispatch) = viewModel.store.createContract().apply {
+        handleEvents { event ->
+            when (event) {
+                SetupEvent.NavigateBack -> navigator.back()
+            }
         }
     }
 

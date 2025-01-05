@@ -6,15 +6,17 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.core.store.StoreConfiguration
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
+import tech.fika.compose.multiplatform.playground.presentation.core.lifecycle.LifecycleListener
+import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 
 @Immutable
 data class Contract<A : Action, E : Event, S : State>(
@@ -25,38 +27,43 @@ data class Contract<A : Action, E : Event, S : State>(
 )
 
 @Composable
-fun <A : Action, E : Event, S : State> contract(
-    stateMachine: StateMachine<A, E, S>,
-    initialState: S? = null,
-    storeConfiguration: StoreConfiguration.Builder<A, E, S>.() -> Unit = {},
-): Contract<A, E, S> {
+fun <A : Action, E : Event, S : State> Store<A, E, S>.createContract(): Contract<A, E, S> {
     val lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle
-    val store = remember {
-        stateMachine.store(
-            initialState = initialState,
-            lifecycle = lifecycle,
-            storeConfiguration = storeConfiguration
-        )
-    }
-    val state by store.state.collectAsState()
-    val events by store.event.collectAsState(initial = null)
+    val state by state.collectAsState()
+    val events by event.collectAsState(initial = null)
+    val lifecycleObserver = lifecycleListener?.toLifecycleObserver(
+        getState = { currentState },
+        dispatch = ::dispatch
+    )
 
     DisposableEffect(Unit) {
+        lifecycleObserver?.let {
+            lifecycle.addObserver(it)
+        }
         onDispose {
-            store.dispose()
+            lifecycleObserver?.let {
+                lifecycle.removeObserver(it)
+            }
         }
     }
 
-    return Contract(
-        state = state,
-        events = events,
-        dispatch = { store.dispatch(it) },
-        process = { store.process(it) }
-    )
+    return Contract(state = state, events = events, dispatch = ::dispatch, process = ::process)
+}
+
+fun <A : Action, S : State> LifecycleListener<A, S>.toLifecycleObserver(
+    getState: () -> S,
+    dispatch: (A) -> Unit,
+): LifecycleObserver = object : DefaultLifecycleObserver {
+    override fun onCreate(owner: LifecycleOwner) = onCreate(getState(), dispatch)
+    override fun onStart(owner: LifecycleOwner) = onStart(getState(), dispatch)
+    override fun onResume(owner: LifecycleOwner) = onResume(getState(), dispatch)
+    override fun onPause(owner: LifecycleOwner) = onPause(getState(), dispatch)
+    override fun onStop(owner: LifecycleOwner) = onStop(getState(), dispatch)
+    override fun onDestroy(owner: LifecycleOwner) = onDestroy()
 }
 
 @Composable
-fun <E : Event> E?.handle(process: (E) -> Unit, block: CoroutineScope.(E) -> Unit) {
+private fun <E : Event> E?.handle(process: (E) -> Unit, block: CoroutineScope.(E) -> Unit) {
     this?.let {
         LaunchedEffect(it) {
             block(it)
@@ -66,10 +73,7 @@ fun <E : Event> E?.handle(process: (E) -> Unit, block: CoroutineScope.(E) -> Uni
 }
 
 @Composable
-fun <A : Action, E : Event, S : State> Contract<A, E, S>.handleEvents(
-    block: CoroutineScope.(E) -> Unit,
-): Contract<A, E, S> {
+fun <E : Event> Contract<*, E, *>.handleEvents(block: CoroutineScope.(E) -> Unit) {
     events?.handle(process = process, block = block)
-    return this
 }
 

@@ -5,6 +5,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestedExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
@@ -40,6 +41,8 @@ internal fun Project.androidApp(block: BaseAppModuleExtension.() -> Unit) =
     extensions.configure(block)
 
 internal fun Project.androidBase(block: BaseExtension.() -> Unit) = extensions.configure(block)
+
+internal fun Project.ksp(block: KspExtension.() -> Unit) = extensions.configure(block)
 
 internal fun Project.ktlint(block: KtlintExtension.() -> Unit) = extensions.configure(block)
 

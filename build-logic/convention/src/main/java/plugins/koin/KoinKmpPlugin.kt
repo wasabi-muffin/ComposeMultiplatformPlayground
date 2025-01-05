@@ -2,6 +2,7 @@ package plugins.koin
 
 import dsl.kmp
 import dsl.kmpKsp
+import dsl.ksp
 import dsl.library
 import dsl.libs
 import dsl.plugin
@@ -35,6 +36,10 @@ class KoinKmpPlugin : Plugin<Project> {
 
         dependencies {
             kmpKsp(libs.library("koin-annotations-compiler"))
+        }
+
+        ksp {
+            arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
         }
     }
 }

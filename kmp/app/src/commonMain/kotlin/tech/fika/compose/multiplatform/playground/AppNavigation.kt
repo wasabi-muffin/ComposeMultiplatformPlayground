@@ -7,8 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import tech.fika.compose.multiplatform.playground.play.ui.InitialRoute
 import tech.fika.compose.multiplatform.playground.play.ui.InitialScreen
 import tech.fika.compose.multiplatform.playground.routers.InitialRouter
@@ -19,7 +18,7 @@ import tech.fika.compose.multiplatform.playground.setup.ui.SetupScreen
 
 @Composable
 fun AppNavigation() {
-    val navController: NavHostController = rememberNavController()
+    val navController = rememberNavController()
 
     NavHost(
         navController = navController,
@@ -28,16 +27,14 @@ fun AppNavigation() {
     ) {
         composable<InitialRoute> {
             InitialScreen(
-                stateMachine = koinInject(),
-                route = it.toRoute(),
+                viewModel = koinViewModel(),
                 navigator = InitialRouter(navController)
             )
         }
 
         composable<SetupRoute> {
             SetupScreen(
-                stateMachine = koinInject(),
-                route = it.toRoute(),
+                viewModel = koinViewModel(),
                 navigator = SetupRouter(navController)
             )
         }

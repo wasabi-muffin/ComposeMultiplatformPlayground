@@ -1,6 +1,5 @@
 package tech.fika.compose.multiplatform.playground.presentation.core.store
 
-import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,7 +19,6 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Tra
 class DefaultStore<A : Action, E : Event, S : State>(
     initialState: S,
     private val processor: Processor<A, E, S>,
-    override val lifecycle: Lifecycle? = null,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate),
     storeConfiguration: StoreConfiguration.Builder<A, E, S>.() -> Unit,
 ) : Store<A, E, S> {
@@ -28,21 +26,17 @@ class DefaultStore<A : Action, E : Event, S : State>(
     private val configuration = StoreConfiguration.Builder<A, E, S>().apply(storeConfiguration).build()
     private val stateFlow = MutableStateFlow(initialState)
     private val eventFlow = MutableStateFlow<E?>(null)
-    private val lifecycleObserver = configuration.lifecycleListener.toLifecycleObserver(
-        getState = { currentState },
-        dispatch = ::dispatch
-    )
 
     override val state = stateFlow
     override val currentState: S get() = stateFlow.value
     override val event get() = eventFlow
+    override val lifecycleListener = configuration.lifecycleListener
 
     init {
-        lifecycle?.addObserver(lifecycleObserver)
-        configuration.stateListener.onEnter(initialState, dispatch = ::dispatch)
+        configuration.stateListener?.onEnter(initialState, dispatch = ::dispatch)
         configuration.messageManager?.subscribe { message ->
             configuration.interceptors.forEach { it.interceptMessage(message) }
-            configuration.messageHandler?.handle(message)?.let(::dispatch)
+            configuration.messageHandler?.handle(message = message, state = currentState, dispatch = ::dispatch)
         }
     }
 
@@ -57,7 +51,7 @@ class DefaultStore<A : Action, E : Event, S : State>(
                     dispatch = ::dispatch
                 )
                 val nextState = if (transition is Valid<A, S, S>) {
-                    configuration.stateListener.observe(transition = transition)
+                    configuration.stateListener?.observe(transition = transition)
                     transition.nextState
                 } else {
                     currentState
@@ -78,7 +72,6 @@ class DefaultStore<A : Action, E : Event, S : State>(
     }
 
     override fun dispose() {
-        lifecycle?.removeObserver(lifecycleObserver)
         configuration.jobHandler.cancelAll()
         coroutineScope.cancel()
     }

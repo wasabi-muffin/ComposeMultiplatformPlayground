@@ -6,9 +6,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import kotlin.coroutines.CoroutineContext
-
-interface Message
 
 interface MessageManager : MessageSender, MessageSubscriber
 
@@ -21,8 +21,8 @@ interface MessageSubscriber {
     fun dispose()
 }
 
-fun interface MessageHandler<A : Action> {
-    fun handle(message: Message): A?
+fun interface MessageHandler<A : Action, S : State> {
+    fun handle(message: Message, state: S, dispatch: (A) -> Unit)
 }
 
 class DefaultMessageManager(

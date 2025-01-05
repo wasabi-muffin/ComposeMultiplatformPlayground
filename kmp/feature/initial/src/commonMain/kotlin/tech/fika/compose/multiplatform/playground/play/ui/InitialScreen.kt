@@ -10,24 +10,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.compose.koinInject
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialAction
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialEvent
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialState
-import tech.fika.compose.multiplatform.playground.play.presentation.InitialStateMachine
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.contract
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.createContract
 
 @Composable
 fun InitialScreen(
-    stateMachine: InitialStateMachine,
-    route: InitialRoute,
+    viewModel: InitialViewModel,
     navigator: InitialNavigator,
 ) {
-    val (state, dispatch) = contract(stateMachine).handleEvents {
-        when (it) {
-            is InitialEvent.NavigateSetup -> navigator.setup(name = it.text)
+    val (state, dispatch) = viewModel.store.createContract().apply {
+        handleEvents {
+            when (it) {
+                is InitialEvent.NavigateSetup -> navigator.setup(name = it.text)
+            }
         }
     }
 
