@@ -24,6 +24,7 @@ androidx-test-junit = "1.2.1"
 android-desugarJdkLibs = "2.1.4"
 # Compose
 compose-multiplatform = "1.7.0"
+compose-navigation = "2.8.0-alpha08"
 coil = "2.6.0"
 # KMP
 ktor = "3.0.3"
@@ -82,6 +83,8 @@ koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref =
 # Koin Annotations
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
 koin-annotations-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
+# Compose
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 # Coil
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }

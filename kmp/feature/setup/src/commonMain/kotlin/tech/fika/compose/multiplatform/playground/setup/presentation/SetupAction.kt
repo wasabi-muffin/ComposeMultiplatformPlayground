@@ -6,6 +6,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Act
 
 sealed class SetupAction : Action {
     data object OnStart : SetupAction()
+    data object ClickBack : SetupAction()
     internal data object LoadPlatform : SetupAction()
     internal data class LoadPlatformSuccess(val platform: Platform) : SetupAction()
     internal data class LoadPlatformError(val error: DomainError) : SetupAction()

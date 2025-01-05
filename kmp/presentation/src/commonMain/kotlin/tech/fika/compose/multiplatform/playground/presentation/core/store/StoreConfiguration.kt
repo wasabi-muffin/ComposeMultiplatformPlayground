@@ -31,41 +31,27 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
             this.stateListener = stateListener
         }
 
-        operator fun StateListener<A, S>.unaryPlus() = add(this)
-
         fun add(lifecycleListener: LifecycleListener<A, S>) {
             this.lifecycleListener = lifecycleListener
         }
-
-        operator fun LifecycleListener<A, S>.unaryPlus() = add(this)
 
         fun add(jobHandler: JobHandler) {
             this.jobHandler = jobHandler
         }
 
-        operator fun JobHandler.unaryPlus() = add(this)
-
         fun add(messageManager: MessageManager?) {
             this.messageManager = messageManager
         }
-
-        operator fun MessageManager?.unaryPlus() = add(this)
 
         fun add(messageHandler: MessageHandler<A>?) {
             this.messageHandler = messageHandler
         }
 
-        operator fun MessageHandler<A>?.unaryPlus() = add(this)
-
         fun add(vararg interceptors: Interceptor<A, E, S>) {
             this.interceptors.addAll(interceptors)
         }
 
-        operator fun Interceptor<A, E, S>.unaryPlus() = add(this)
-
         fun add(interceptors: List<Interceptor<A, E, S>>) = add(*interceptors.toTypedArray())
-
-        operator fun List<Interceptor<A, E, S>>.unaryPlus() = add(this)
 
         fun build(): StoreConfiguration<A, E, S> = StoreConfiguration(
             stateListener = stateListener ?: StateListener.default(),

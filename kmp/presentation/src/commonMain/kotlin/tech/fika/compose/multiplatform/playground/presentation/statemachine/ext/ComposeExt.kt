@@ -66,7 +66,10 @@ fun <E : Event> E?.handle(process: (E) -> Unit, block: CoroutineScope.(E) -> Uni
 }
 
 @Composable
-fun <E : Event> Contract<*, E, *>.handleEvents(block: CoroutineScope.(E) -> Unit) {
+fun <A : Action, E : Event, S : State> Contract<A, E, S>.handleEvents(
+    block: CoroutineScope.(E) -> Unit,
+): Contract<A, E, S> {
     events?.handle(process = process, block = block)
+    return this
 }
 

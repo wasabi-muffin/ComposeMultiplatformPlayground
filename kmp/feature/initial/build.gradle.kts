@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.build.kmp.desktop)
     alias(libs.plugins.build.koin.kmp)
     alias(libs.plugins.build.compose.kmp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -14,6 +15,7 @@ kotlin {
             implementation(projects.kmp.domain)
             implementation(projects.kmp.presentation)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
     }
 }

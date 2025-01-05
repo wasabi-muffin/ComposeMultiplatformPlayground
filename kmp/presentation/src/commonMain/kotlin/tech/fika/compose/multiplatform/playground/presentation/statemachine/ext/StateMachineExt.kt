@@ -31,11 +31,11 @@ fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     lifecycle = lifecycle,
     coroutineScope = coroutineScope,
 ) {
-    +StateMachineStateListener(this@store)
-    +StateMachineLifecycleListener(this@store)
-    +this@store.jobHandler
-    +messageManager
-    +(messageHandler ?: this@store.messageHandler)
-    +interceptors
+    add(stateListener = StateMachineStateListener(this@store))
+    add(lifecycleListener = StateMachineLifecycleListener(this@store))
+    add(jobHandler = this@store.jobHandler)
+    add(messageManager = messageManager)
+    add(messageHandler = (messageHandler ?: this@store.messageHandler))
+    add(interceptors = interceptors)
     storeConfiguration()
 }

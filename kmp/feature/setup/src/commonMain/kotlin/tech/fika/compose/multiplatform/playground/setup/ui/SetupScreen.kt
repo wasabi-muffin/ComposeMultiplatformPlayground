@@ -13,17 +13,31 @@ import composemultiplatformplayground.kmp.feature.setup.generated.resources.Res
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
+import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
+import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.contract
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupAction
+import tech.fika.compose.multiplatform.playground.setup.presentation.SetupEvent
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupState
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupStateMachine
 
 @Composable
-fun SetupScreen() {
-    val stateMachine: SetupStateMachine = koinInject()
-    val contract = contract(stateMachine = stateMachine)
+fun SetupScreen(
+    stateMachine: SetupStateMachine,
+    route: SetupRoute,
+    navigator: SetupNavigator,
+) {
+    val (state, dispatch) = contract(
+        stateMachine = stateMachine,
+        initialState = SetupState.Initial(name = route.name)
+    ).handleEvents {
+        when (it) {
+            SetupEvent.NavigateBack -> navigator.back()
+        }
+    }
 
-    SetupScreenContent(state = contract.state, dispatch = contract.dispatch)
+    SetupScreenContent(state = state, dispatch = dispatch)
 }
 
 @Composable
@@ -32,6 +46,9 @@ private fun SetupScreenContent(
     dispatch: (SetupAction) -> Unit,
 ) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(onClick = { dispatch(SetupAction.ClickBack) }) {
+            Text("Back")
+        }
         if (state is SetupState.Stable) {
             Button(onClick = { dispatch(SetupAction.ClickMe) }) {
                 Text("Click me!")
@@ -42,7 +59,7 @@ private fun SetupScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: ${state.greeting.greet}")
+                    Text("${state.name}: ${state.greeting.greet}")
                 }
             }
         }

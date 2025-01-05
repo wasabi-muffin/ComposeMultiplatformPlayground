@@ -58,7 +58,7 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
     internal fun build(): StateMachine<A, E, S> = StateMachine(
         rootNode = RootNode(
             initialState = initialState,
-            stateMap = stateMap.toMap(),
+            stateMap = stateMap.toList().reversed().toMap(),
             lifecycleNode = lifecycleNode,
             interceptorNode = interceptorNode,
             jobHandler = jobHandler,
