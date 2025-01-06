@@ -33,10 +33,15 @@ class DefaultStore<A : Action, E : Event, S : State>(
     override val lifecycleListener = configuration.lifecycleListener
 
     init {
-        configuration.stateListener?.onEnter(initialState, dispatch = ::dispatch)
-        configuration.messageManager?.subscribe { message ->
-            configuration.interceptors.forEach { it.interceptMessage(message) }
-            configuration.messageHandler?.handle(message = message, state = currentState, dispatch = ::dispatch)
+        configuration.stateListener?.onEnter(state = initialState, dispatch = ::dispatch)
+        configuration.messageRelay?.subscribe { message ->
+            configuration.messageHandler?.handle(
+                message = message,
+                state = currentState,
+                dispatch = ::dispatch
+            )?.let {
+                configuration.interceptors.forEach { it.interceptMessage(message) }
+            }
         }
     }
 

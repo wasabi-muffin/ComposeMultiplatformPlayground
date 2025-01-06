@@ -2,7 +2,6 @@ package tech.fika.compose.multiplatform.playground.presentation.statemachine.bui
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.LifecycleDsl
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.LifecycleNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ListenerNode
 

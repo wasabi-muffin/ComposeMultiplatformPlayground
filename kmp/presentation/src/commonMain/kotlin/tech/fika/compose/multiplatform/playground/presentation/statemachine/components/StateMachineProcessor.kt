@@ -25,10 +25,19 @@ class StateMachineProcessor<A : Action, E : Event, S : State>(
             ActionNode(
                 action = action,
                 state = state,
-                dispatchAction = dispatch,
-                sendEvent = send,
+                dispatch = {
+                    dispatch(it)
+                    Transition.Empty
+                },
+                send = {
+                    send(it)
+                    Transition.Empty
+                },
+                publish = {
+                    stateMachine.messageRelay?.publish(it)
+                    Transition.Empty
+                },
                 jobHandler = stateMachine.jobHandler,
-                messageSender = stateMachine.messageManager,
             )
         )
         ?: Transition.Invalid

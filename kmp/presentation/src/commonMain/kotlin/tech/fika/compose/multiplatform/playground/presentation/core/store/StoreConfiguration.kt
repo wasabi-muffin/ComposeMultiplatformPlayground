@@ -8,14 +8,14 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.core.lifecycle.LifecycleListener
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.DefaultJobHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.JobHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
+import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageHandler
+import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 
 data class StoreConfiguration<A : Action, E : Event, S : State>(
     val jobHandler: JobHandler,
     val stateListener: StateListener<A, S>?,
     val lifecycleListener: LifecycleListener<A, S>?,
-    val messageManager: MessageManager?,
+    val messageRelay: MessageRelay?,
     val messageHandler: MessageHandler<A, S>?,
     val interceptors: List<Interceptor<A, E, S>>,
 ) {
@@ -23,7 +23,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
         private var jobHandler: JobHandler = DefaultJobHandler()
         private var stateListener: StateListener<A, S>? = null
         private var lifecycleListener: LifecycleListener<A, S>? = null
-        private var messageManager: MessageManager? = null
+        private var messageRelay: MessageRelay? = null
         private var messageHandler: MessageHandler<A, S>? = null
         private var interceptors: MutableList<Interceptor<A, E, S>> = mutableListOf()
 
@@ -39,8 +39,8 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
             this.jobHandler = jobHandler
         }
 
-        fun add(messageManager: MessageManager?) {
-            this.messageManager = messageManager
+        fun add(messageRelay: MessageRelay?) {
+            this.messageRelay = messageRelay
         }
 
         fun add(messageHandler: MessageHandler<A, S>?) {
@@ -57,7 +57,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
             jobHandler = jobHandler,
             stateListener = stateListener,
             lifecycleListener = lifecycleListener,
-            messageManager = messageManager,
+            messageRelay = messageRelay,
             messageHandler = messageHandler,
             interceptors = interceptors,
         )

@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.build.kmp.wasm)
     alias(libs.plugins.build.kmp.desktop)
     alias(libs.plugins.build.koin.kmp)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.build.tools.serialization)
 }
 
 kotlin {
@@ -17,7 +17,6 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.kmp.domain)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.settings.core)
             implementation(libs.settings.serialization)

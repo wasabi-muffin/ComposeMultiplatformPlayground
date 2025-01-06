@@ -1,25 +1,20 @@
 package tech.fika.compose.multiplatform.playground.play.presentation
 
 import org.koin.core.annotation.Factory
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
+import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
+import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.TestMessage
 
 @Factory(binds = [InitialStateMachine::class])
 class InitialStateMachine(
-    messageManager: MessageManager,
+    messageRelay: MessageRelay,
 ) : StateMachine<InitialAction, InitialEvent, InitialState>(
-    messageManager = messageManager,
+    messageRelay = messageRelay,
     builder = {
         initialState { InitialState.Initial(text = "") }
 
-        state<InitialState> {
-            receive<TestMessage> {
-                dispatch(InitialAction.InputText(text = message.value))
-            }
-        }
-
         state<InitialState.Initial> {
+            receive<TestMessage> { dispatch(InitialAction.InputText(message.value)) }
             process<InitialAction.ClickNext> {
                 send(InitialEvent.NavigateSetup(text = state.text))
             }
@@ -29,4 +24,5 @@ class InitialStateMachine(
                 }
             }
         }
-    })
+    }
+)

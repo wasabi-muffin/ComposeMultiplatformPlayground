@@ -1,4 +1,4 @@
-package tech.fika.compose.multiplatform.playground.presentation.statemachine.components
+package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 @DslMarker
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)

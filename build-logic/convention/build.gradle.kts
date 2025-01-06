@@ -80,6 +80,10 @@ gradlePlugin {
             id = "build.koin.server"
             implementationClass = "plugins.koin.KoinServerPlugin"
         }
+        register("serialization") {
+            id = "build.tools.serialzation"
+            implementationClass = "plugins.tools.SerializationPlugin"
+        }
         register("ktlint") {
             id = "build.tools.ktlint"
             implementationClass = "plugins.tools.KtlintPlugin"

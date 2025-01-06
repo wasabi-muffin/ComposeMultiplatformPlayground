@@ -5,16 +5,18 @@ import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
 import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
+import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
+import tech.fika.compose.multiplatform.playground.presentation.core.message.Test2Message
+import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.TestMessage
 
 @Factory(binds = [SetupStateMachine::class])
 class SetupStateMachine(
     getPlatformUseCase: GetPlatformUseCase,
-    messageManager: MessageManager,
     errorHandler: ErrorHandler,
+    messageRelay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>(
+    messageRelay = messageRelay,
     builder = {
         state<SetupState> {
             process<SetupAction.ClickBack> {
@@ -51,7 +53,8 @@ class SetupStateMachine(
 
         state<SetupState.Stable> {
             process<SetupAction.ClickMe> {
-                messageManager.send(TestMessage(value = "Hello From Setup"))
+                publish(TestMessage("Test"))
+                publish(Test2Message)
                 transition {
                     state.copy(isShowContent = !state.isShowContent)
                 }

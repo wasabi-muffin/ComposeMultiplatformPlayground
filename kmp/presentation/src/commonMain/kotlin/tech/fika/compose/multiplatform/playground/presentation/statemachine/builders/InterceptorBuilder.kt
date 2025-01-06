@@ -4,7 +4,6 @@ import tech.fika.compose.multiplatform.playground.presentation.core.components.I
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineDsl
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.InterceptorNode
 
 @StateMachineDsl

@@ -44,6 +44,7 @@ kotest = "5.4.1"
 mockk = "1.12.2"
 # Tools
 ktlint = "12.1.1"
+build = "UNDEFINED"
 
 [libraries]
 # Gradle
@@ -155,18 +156,19 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 # Build
-build-kotlin-android = { id = "build.kotlin.android", version = "UNDEFINED" }
-build-kotlin-jvm = { id = "build.kotlin.jvm", version = "UNDEFINED" }
-build-kotlin-wasm = { id = "build.kotlin.wasm", version = "UNDEFINED" }
-build-android-application = { id = "build.android.application", version = "UNDEFINED" }
-build-android-library = { id = "build.android.library", version = "UNDEFINED" }
-build-kmp-android = { id = "build.kmp.android", version = "UNDEFINED" }
-build-kmp-ios = { id = "build.kmp.ios", version = "UNDEFINED" }
-build-kmp-wasm = { id = "build.kmp.wasm", version = "UNDEFINED" }
-build-kmp-desktop = { id = "build.kmp.desktop", version = "UNDEFINED" }
-build-compose-kmp = { id = "build.compose.kmp", version = "UNDEFINED" }
-build-compose-android = { id = "build.compose.android", version = "UNDEFINED" }
-build-compose-desktop = { id = "build.compose.desktop", version = "UNDEFINED" }
-build-koin-kmp = { id = "build.koin.kmp", version = "UNDEFINED" }
-build-koin-android = { id = "build.koin.android", version = "UNDEFINED" }
-build-koin-server = { id = "build.koin.server", version = "UNDEFINED" }
+build-kotlin-android = { id = "build.kotlin.android", version.ref = "build" }
+build-kotlin-jvm = { id = "build.kotlin.jvm", version.ref = "build" }
+build-kotlin-wasm = { id = "build.kotlin.wasm", version.ref = "build" }
+build-android-application = { id = "build.android.application", version.ref = "build" }
+build-android-library = { id = "build.android.library", version.ref = "build" }
+build-kmp-android = { id = "build.kmp.android", version.ref = "build" }
+build-kmp-ios = { id = "build.kmp.ios", version.ref = "build" }
+build-kmp-wasm = { id = "build.kmp.wasm", version.ref = "build" }
+build-kmp-desktop = { id = "build.kmp.desktop", version.ref = "build" }
+build-compose-kmp = { id = "build.compose.kmp", version.ref = "build" }
+build-compose-android = { id = "build.compose.android", version.ref = "build" }
+build-compose-desktop = { id = "build.compose.desktop", version.ref = "build" }
+build-koin-kmp = { id = "build.koin.kmp", version.ref = "build" }
+build-koin-android = { id = "build.koin.android", version.ref = "build" }
+build-koin-server = { id = "build.koin.server", version.ref = "build" }
+build-tools-serialization = { id = "build.tools.serialzation", version.ref = "build"}

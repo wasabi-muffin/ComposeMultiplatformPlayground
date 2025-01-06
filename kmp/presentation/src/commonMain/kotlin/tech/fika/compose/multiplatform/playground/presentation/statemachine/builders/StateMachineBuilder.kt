@@ -5,12 +5,10 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Eve
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
+import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.DefaultJobHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.tools.JobHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateDsl
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineDsl
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ActionNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.InterceptorNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.LifecycleNode
@@ -23,7 +21,7 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.node
 @StateMachineDsl
 class StateMachineBuilder<A : Action, E : Event, S : State>(
     private val jobHandler: JobHandler = DefaultJobHandler(),
-    private val messageManager: MessageManager? = null,
+    private val messageRelay: MessageRelay? = null,
 ) {
     private var interceptorNode: InterceptorNode<A, E, S> = InterceptorNode()
     private var lifecycleNode: LifecycleNode<A, S> = LifecycleNode()
@@ -41,8 +39,9 @@ class StateMachineBuilder<A : Action, E : Event, S : State>(
         stateMap[stateMatcher] = StateBuilder<S1>().apply(builder).build()
     }
 
-    inline fun <reified S1 : S> state(noinline builder: @StateMachineDsl StateBuilder<S1>.() -> Unit) =
-        state(Matcher.any(), builder)
+    inline fun <reified S1 : S> state(
+        noinline builder: @StateMachineDsl StateBuilder<S1>.() -> Unit,
+    ) = state(Matcher.any(), builder)
 
     fun lifecycle(builder: @StateMachineDsl LifecycleBuilder<A, S>.() -> Unit) {
         lifecycleNode = LifecycleBuilder<A, S>().apply(builder).build()
@@ -59,17 +58,8 @@ class StateMachineBuilder<A : Action, E : Event, S : State>(
             lifecycleNode = lifecycleNode,
             interceptorNode = interceptorNode,
             jobHandler = jobHandler,
-            messageManager = messageManager,
+            messageRelay = messageRelay,
         )
-    )
-
-    internal fun buildRoot(): RootNode<A, E, S> = RootNode(
-        initialState = initialState,
-        stateMap = stateMap.toList().reversed().toMap(),
-        lifecycleNode = lifecycleNode,
-        interceptorNode = interceptorNode,
-        jobHandler = jobHandler,
-        messageManager = messageManager,
     )
 
     @Suppress("UNCHECKED_CAST")
@@ -97,24 +87,24 @@ class StateMachineBuilder<A : Action, E : Event, S : State>(
             actionMatcher: Matcher<A, A1>,
             process: @StateDsl ActionNode<A, E, S, A1, S1>.() -> Transition<A, S1, S>,
         ) {
-            actionMap[actionMatcher] = { (action, currentState, dispatch, send) ->
+            actionMap[actionMatcher] = { (action, currentState, dispatch, send, publish) ->
                 process(
                     ActionNode<A, E, S, A1, S>(
                         action = action as A1,
                         state = currentState,
-                        dispatchAction = dispatch,
-                        sendEvent = send,
+                        dispatch = dispatch,
+                        send = send,
+                        publish = publish,
                         jobHandler = jobHandler,
-                        messageSender = messageManager,
                     ) as ActionNode<A, E, S, A1, S1>
                 )
             }
         }
 
-        inline fun <reified A1 : A> process(noinline action: @StateDsl ActionNode<A, E, S, A1, S1>.() -> Transition<A, S1, S>) =
-            process(Matcher.any(), action)
+        inline fun <reified A1 : A> process(
+            noinline action: @StateDsl ActionNode<A, E, S, A1, S1>.() -> Transition<A, S1, S>,
+        ) = process(Matcher.any(), action)
 
-        @Suppress("UNCHECKED_CAST")
         fun <M : Message> receive(
             messageMatcher: Matcher<Message, M>,
             receive: @StateDsl MessageNode<A, S, M>.() -> Unit,
@@ -130,8 +120,9 @@ class StateMachineBuilder<A : Action, E : Event, S : State>(
             }
         }
 
-        inline fun <reified M : Message> receive(noinline message: @StateDsl MessageNode<A, S, M>.() -> Unit) =
-            receive(Matcher.any(), message)
+        inline fun <reified M : Message> receive(
+            noinline message: @StateDsl MessageNode<A, S, M>.() -> Unit,
+        ) = receive(Matcher.any(), message)
 
         internal fun build(): StateNode<A, E, S> = StateNode(
             actionMap = actionMap,

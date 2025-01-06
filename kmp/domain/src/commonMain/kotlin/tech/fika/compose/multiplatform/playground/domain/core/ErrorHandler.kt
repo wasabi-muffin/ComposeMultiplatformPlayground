@@ -28,7 +28,7 @@ fun combine(vararg errorHandler: ErrorHandler): ErrorHandler = ErrorHandler { er
         val nextError = handler.handle(error)
         if (nextError !is DomainError.Unknown) return@ErrorHandler nextError
     }
-    return@ErrorHandler DomainError.Unknown(error)
+    return@ErrorHandler DomainError.Unknown(error.message)
 }
 
 operator fun ErrorHandler.plus(other: ErrorHandler): ErrorHandler = combine(this, other)

@@ -1,7 +1,13 @@
 package tech.fika.compose.multiplatform.playground.domain.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class DomainResult<out R> {
+    @Serializable
     data class Success<out T>(val data: T) : DomainResult<T>()
+
+    @Serializable
     data class Failure(val error: DomainError) : DomainResult<Nothing>()
 
     inline fun <T> fold(

@@ -1,11 +1,9 @@
-package tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes
+package tech.fika.compose.multiplatform.playground.presentation.core.message
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
-data class MessageNode<A : Action, S : State, M : Message>(
-    val message: M,
-    val state: S,
-    val dispatch: (A) -> Unit,
-)
+fun interface MessageHandler<A : Action, S : State> {
+    fun handle(message: Message, state: S, dispatch: (A) -> Unit): Unit?
+}

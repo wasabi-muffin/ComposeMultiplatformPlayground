@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import org.koin.android.annotation.KoinViewModel
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.MessageManager
 import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
+import tech.fika.compose.multiplatform.playground.presentation.saveState.SaveStateInterceptor
+import tech.fika.compose.multiplatform.playground.presentation.saveState.getState
+import tech.fika.compose.multiplatform.playground.presentation.saveState.setState
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.store
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupState
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupStateMachine
@@ -17,8 +19,9 @@ class SetupViewModel(
 ) : ViewModel() {
     private val route: SetupRoute = savedStateHandle.toRoute()
     val store = setupStateMachine.store(
-        initialState = SetupState.Initial(name = route.name),
+        initialState = savedStateHandle.getState() ?: SetupState.Initial(name = route.name),
     ) {
-        add(LoggingInterceptor())
+        add(LoggingInterceptor(tag = "Setup"))
+        add(SaveStateInterceptor(savedStateHandle::setState))
     }
 }
