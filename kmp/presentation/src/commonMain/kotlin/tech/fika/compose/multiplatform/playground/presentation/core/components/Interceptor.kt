@@ -2,7 +2,7 @@ package tech.fika.compose.multiplatform.playground.presentation.core.components
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
-import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
+import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
 interface Interceptor<A : Action, E : Event, S : State> {

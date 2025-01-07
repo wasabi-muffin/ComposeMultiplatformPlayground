@@ -8,6 +8,7 @@ import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUse
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.core.message.Test2Message
 import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
+import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
 
 @Factory(binds = [SetupStateMachine::class])
@@ -16,8 +17,21 @@ class SetupStateMachine(
     errorHandler: ErrorHandler,
     messageRelay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>(
-    messageRelay = messageRelay,
     builder = {
+        config {
+            set(messageRelay)
+            add(interceptor = LoggingInterceptor())
+        }
+
+        lifecycle {
+            onResume {
+                when (state) {
+                    is SetupState.Stable -> dispatch(SetupAction.LoadPlatform)
+                    else -> Unit
+                }
+            }
+        }
+
         state<SetupState> {
             process<SetupAction.ClickBack> {
                 send(SetupEvent.NavigateBack)
@@ -25,14 +39,19 @@ class SetupStateMachine(
         }
 
         state<SetupState.Initial> {
-            onEnter { dispatch(SetupAction.OnStart) }
+            listener {
+                onEnter { dispatch(SetupAction.OnStart) }
+            }
+
             process<SetupAction.OnStart> {
                 transition { SetupState.Loading(name = state.name) }
             }
         }
 
         state<SetupState.Loading> {
-            onEnter { dispatch(SetupAction.LoadPlatform) }
+            listener {
+                onEnter { dispatch(SetupAction.LoadPlatform) }
+            }
             process<SetupAction.LoadPlatform> {
                 launch {
                     errorHandler(with = getPlatformUseCase) {

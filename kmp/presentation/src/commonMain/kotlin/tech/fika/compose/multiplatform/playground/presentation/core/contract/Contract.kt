@@ -7,5 +7,3 @@ interface Action : Contract
 interface Event : Contract
 
 interface State : Contract
-
-interface Message : Contract

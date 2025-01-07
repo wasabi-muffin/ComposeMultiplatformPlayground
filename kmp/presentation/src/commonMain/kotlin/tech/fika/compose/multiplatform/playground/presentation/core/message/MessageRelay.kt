@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
 import kotlin.coroutines.CoroutineContext
 
 interface MessageRelay : MessagePublisher, MessageSubscriber

@@ -11,3 +11,11 @@ annotation class StateDsl
 @DslMarker
 @Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
 annotation class LifecycleDsl
+
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
+annotation class ConfigDsl
+
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
+annotation class StateListenerDsl

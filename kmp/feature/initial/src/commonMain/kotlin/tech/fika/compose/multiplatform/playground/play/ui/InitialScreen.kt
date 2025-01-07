@@ -14,20 +14,22 @@ import tech.fika.compose.multiplatform.playground.play.presentation.InitialActio
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialEvent
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialState
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.createContract
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.setLifecycleObserver
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.toViewStore
 
 @Composable
 fun InitialScreen(
     viewModel: InitialViewModel,
     navigator: InitialNavigator,
 ) {
-    val (state, dispatch) = viewModel.store.createContract().apply {
-        handleEvents {
+    val (state, dispatch) = viewModel.store
+        .setLifecycleObserver()
+        .handleEvents {
             when (it) {
                 is InitialEvent.NavigateSetup -> navigator.setup(name = it.text)
             }
         }
-    }
+        .toViewStore()
 
     InitialScreenContent(state = state, dispatch = dispatch)
 }

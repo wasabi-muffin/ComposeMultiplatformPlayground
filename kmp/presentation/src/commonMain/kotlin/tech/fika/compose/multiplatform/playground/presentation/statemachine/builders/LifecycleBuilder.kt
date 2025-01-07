@@ -14,27 +14,27 @@ class LifecycleBuilder<A : Action, S : State> {
     private var onStop: ListenerNode<A, S>.() -> Unit = {}
     private var onDestroy: () -> Unit = {}
 
-    fun onCreate(block: ListenerNode<A, S>.() -> Unit) {
+    fun onCreate(block: @LifecycleDsl ListenerNode<A, S>.() -> Unit) {
         onCreate = block
     }
 
-    fun onStart(block: ListenerNode<A, S>.() -> Unit) {
+    fun onStart(block: @LifecycleDsl ListenerNode<A, S>.() -> Unit) {
         onStart = block
     }
 
-    fun onResume(block: ListenerNode<A, S>.() -> Unit) {
+    fun onResume(block: @LifecycleDsl ListenerNode<A, S>.() -> Unit) {
         onResume = block
     }
 
-    fun onPause(block: ListenerNode<A, S>.() -> Unit) {
+    fun onPause(block: @LifecycleDsl ListenerNode<A, S>.() -> Unit) {
         onPause = block
     }
 
-    fun onStop(block: ListenerNode<A, S>.() -> Unit) {
+    fun onStop(block: @LifecycleDsl ListenerNode<A, S>.() -> Unit) {
         onStop = block
     }
 
-    fun onDestroy(block: () -> Unit) {
+    fun onDestroy(block: @LifecycleDsl () -> Unit) {
         onDestroy = block
     }
 

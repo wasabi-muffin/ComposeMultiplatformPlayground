@@ -13,7 +13,7 @@ import composemultiplatformplayground.kmp.feature.setup.generated.resources.Res
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.createContract
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.toViewStore
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupAction
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupEvent
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupState
@@ -23,13 +23,13 @@ fun SetupScreen(
     viewModel: SetupViewModel,
     navigator: SetupNavigator,
 ) {
-    val (state, dispatch) = viewModel.store.createContract().apply {
-        handleEvents { event ->
+    val (state, dispatch) = viewModel.store
+        .handleEvents { event ->
             when (event) {
                 SetupEvent.NavigateBack -> navigator.back()
             }
         }
-    }
+        .toViewStore()
 
     SetupScreenContent(state = state, dispatch = dispatch)
 }

@@ -22,20 +22,9 @@ open class StateMachine<A : Action, E : Event, S : State>(
         StateMachineBuilder<A, E, S>().apply(builder).build().rootNode
     )
 
-    constructor(
-        messageRelay: MessageRelay? = null,
-        jobHandler: JobHandler = DefaultJobHandler(),
-        builder: StateMachineBuilder<A, E, S>.() -> Unit,
-    ) : this(
-        StateMachineBuilder<A, E, S>(
-            jobHandler = jobHandler,
-            messageRelay = messageRelay,
-        ).apply(builder).build().rootNode
-    )
-
     internal val stateMap: Map<Matcher<S, S>, StateNode<A, E, S>> = rootNode.stateMap
     internal val lifecycleNode = rootNode.lifecycleNode
-    internal val interceptors = rootNode.interceptorNode.interceptors
+    internal val interceptors = rootNode.interceptors
     internal val jobHandler = rootNode.jobHandler
 
     val initialState: S? get() = rootNode.initialState

@@ -9,12 +9,15 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.comp
 class InitialStateMachine(
     messageRelay: MessageRelay,
 ) : StateMachine<InitialAction, InitialEvent, InitialState>(
-    messageRelay = messageRelay,
     builder = {
-        initialState { InitialState.Initial(text = "") }
+        config {
+            initialState = InitialState.Initial(text = "")
+            set(messageRelay)
+        }
 
         state<InitialState.Initial> {
             receive<TestMessage> { dispatch(InitialAction.InputText(message.value)) }
+
             process<InitialAction.ClickNext> {
                 send(InitialEvent.NavigateSetup(text = state.text))
             }

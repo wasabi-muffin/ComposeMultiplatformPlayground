@@ -2,7 +2,7 @@ package tech.fika.compose.multiplatform.playground.presentation.statemachine.nod
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
-import tech.fika.compose.multiplatform.playground.presentation.core.contract.Message
+import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.builders.Matcher

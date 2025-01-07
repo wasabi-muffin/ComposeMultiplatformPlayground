@@ -8,72 +8,62 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.core.lifecycle.LifecycleListener
 import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 
 @Immutable
-data class Contract<A : Action, E : Event, S : State>(
+data class ViewStore<A : Action, S : State>(
     val state: S,
     val dispatch: (A) -> Unit = {},
-    internal val events: E? = null,
-    internal val process: (E) -> Unit = {},
 )
 
 @Composable
-fun <A : Action, E : Event, S : State> Store<A, E, S>.createContract(): Contract<A, E, S> {
-    val lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle
+fun <A : Action, E : Event, S : State> Store<A, E, S>.toViewStore(): ViewStore<A, S> {
     val state by state.collectAsState()
-    val events by event.collectAsState(initial = null)
-    val lifecycleObserver = lifecycleListener?.toLifecycleObserver(
-        getState = { currentState },
-        dispatch = ::dispatch
-    )
 
-    DisposableEffect(Unit) {
-        lifecycleObserver?.let {
-            lifecycle.addObserver(it)
-        }
-        onDispose {
-            lifecycleObserver?.let {
-                lifecycle.removeObserver(it)
+    return ViewStore(state = state, dispatch = ::dispatch)
+}
+
+@Composable
+inline fun <A : Action, E : Event, S : State> Store<A, E, S>.setLifecycleObserver(): Store<A, E, S> = apply {
+    val lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    lifecycleObserver?.let { observer ->
+        DisposableEffect(key1 = observer) {
+            lifecycle.addObserver(observer = observer)
+            onDispose {
+                lifecycle.removeObserver(observer = observer)
             }
         }
     }
-
-    return Contract(state = state, events = events, dispatch = ::dispatch, process = ::process)
 }
 
-fun <A : Action, S : State> LifecycleListener<A, S>.toLifecycleObserver(
-    getState: () -> S,
-    dispatch: (A) -> Unit,
-): LifecycleObserver = object : DefaultLifecycleObserver {
-    override fun onCreate(owner: LifecycleOwner) = onCreate(getState(), dispatch)
-    override fun onStart(owner: LifecycleOwner) = onStart(getState(), dispatch)
-    override fun onResume(owner: LifecycleOwner) = onResume(getState(), dispatch)
-    override fun onPause(owner: LifecycleOwner) = onPause(getState(), dispatch)
-    override fun onStop(owner: LifecycleOwner) = onStop(getState(), dispatch)
-    override fun onDestroy(owner: LifecycleOwner) = onDestroy()
-}
+val <A : Action, E : Event, S : State> Store<A, E, S>.lifecycleObserver
+    get() = lifecycleListener?.let { listener ->
+        object : DefaultLifecycleObserver {
+            override fun onCreate(owner: LifecycleOwner) = listener.onCreate(currentState, ::dispatch)
+            override fun onStart(owner: LifecycleOwner) = listener.onStart(currentState, ::dispatch)
+            override fun onResume(owner: LifecycleOwner) = listener.onResume(currentState, ::dispatch)
+            override fun onPause(owner: LifecycleOwner) = listener.onPause(currentState, ::dispatch)
+            override fun onStop(owner: LifecycleOwner) = listener.onStop(currentState, ::dispatch)
+            override fun onDestroy(owner: LifecycleOwner) = listener.onDestroy()
+        }
+    }
 
 @Composable
-private fun <E : Event> E?.handle(process: (E) -> Unit, block: CoroutineScope.(E) -> Unit) {
-    this?.let {
-        LaunchedEffect(it) {
-            block(it)
-            process(it)
+inline fun <A : Action, E : Event, S : State> Store<A, E, S>.handleEvents(
+    noinline block: CoroutineScope.(E) -> Unit,
+): Store<A, E, S> = apply {
+    val events by event.collectAsState(initial = null)
+    events?.let { event ->
+        LaunchedEffect(event) {
+            block(event)
+            process(event)
         }
     }
 }
-
-@Composable
-fun <E : Event> Contract<*, E, *>.handleEvents(block: CoroutineScope.(E) -> Unit) {
-    events?.handle(process = process, block = block)
-}
-
