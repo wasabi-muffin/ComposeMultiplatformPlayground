@@ -2,10 +2,9 @@ package tech.fika.compose.multiplatform.playground.presentation.statemachine.bui
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
-import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
+import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ActionNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ConfigNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.LifecycleNode
@@ -39,15 +38,10 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
         configNode = ConfigBuilder<A, E, S>().apply(builder).build()
     }
 
-    internal fun build(): StateMachine<A, E, S> = StateMachine(
-        rootNode = RootNode(
-            stateMap = stateMap.toList().reversed().toMap(),
-            lifecycleNode = lifecycleNode,
-            initialState = configNode.initialState,
-            interceptors = configNode.interceptors,
-            jobHandler = configNode.jobHandler,
-            messageRelay = configNode.messageRelay,
-        )
+    internal fun build(): RootNode<A, E, S> = RootNode(
+        stateMap = stateMap.toList().reversed().toMap(),
+        lifecycleNode = lifecycleNode,
+        configNode = configNode,
     )
 
     @Suppress("UNCHECKED_CAST")
@@ -65,7 +59,7 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
             actionMatcher: Matcher<A, A1>,
             process: @StateDsl ActionNode<A, E, S, A1, S1>.() -> Transition<A, S1, S>,
         ) {
-            actionMap[actionMatcher] = { (action, currentState, dispatch, send, publish) ->
+            actionMap[actionMatcher] = { (action, currentState, dispatch, send, publish, launch) ->
                 process(
                     ActionNode<A, E, S, A1, S>(
                         action = action as A1,
@@ -73,7 +67,7 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
                         dispatch = dispatch,
                         send = send,
                         publish = publish,
-                        jobHandler = configNode.jobHandler,
+                        launch = launch,
                     ) as ActionNode<A, E, S, A1, S1>
                 )
             }

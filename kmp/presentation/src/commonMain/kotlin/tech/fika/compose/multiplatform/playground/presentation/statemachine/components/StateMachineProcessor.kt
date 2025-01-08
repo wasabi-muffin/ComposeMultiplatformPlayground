@@ -6,16 +6,17 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Eve
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ActionNode
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.RootNode
 
 class StateMachineProcessor<A : Action, E : Event, S : State>(
-    private val stateMachine: StateMachine<A, E, S>,
+    private val rootNode: RootNode<A, E, S>,
 ) : Processor<A, E, S> {
     override suspend fun process(
         action: A,
         state: S,
         dispatch: (A) -> Unit,
         send: (E) -> Unit,
-    ): Transition<A, S, S> = stateMachine.stateMap
+    ): Transition<A, S, S> = rootNode.stateMap
         .filterKeys { key -> key.matches(value = state) }
         .values
         .flatMap { stateNode -> stateNode.actionMap.entries }
@@ -25,19 +26,22 @@ class StateMachineProcessor<A : Action, E : Event, S : State>(
             ActionNode(
                 action = action,
                 state = state,
-                dispatch = {
-                    dispatch(it)
+                dispatch = { nextAction ->
+                    dispatch(nextAction)
                     Transition.Empty
                 },
-                send = {
-                    send(it)
+                send = { event ->
+                    send(event)
                     Transition.Empty
                 },
-                publish = {
-                    stateMachine.messageRelay?.publish(it)
+                publish = { message ->
+                    rootNode.configNode.messageRelay?.publish(message)
                     Transition.Empty
                 },
-                jobHandler = stateMachine.jobHandler,
+                launch = { key, block ->
+                    rootNode.configNode.jobHandler.launch(key, block)
+                    Transition.Empty
+                },
             )
         )
         ?: Transition.Invalid

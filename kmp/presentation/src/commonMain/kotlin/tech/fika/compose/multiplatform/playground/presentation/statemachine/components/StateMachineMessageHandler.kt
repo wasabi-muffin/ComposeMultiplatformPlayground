@@ -6,11 +6,12 @@ import tech.fika.compose.multiplatform.playground.presentation.core.message.Mess
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.MessageNode
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.RootNode
 
 class StateMachineMessageHandler<A : Action, E : Event, S : State>(
-    private val stateMachine: StateMachine<A, E, S>,
+    private val rootNode: RootNode<A, E, S>,
 ) : MessageHandler<A, S> {
-    override fun handle(message: Message, state: S, dispatch: (A) -> Unit): Unit? = stateMachine.stateMap
+    override fun handle(message: Message, state: S, dispatch: (A) -> Unit): Unit? = rootNode.stateMap
         .filterKeys { key -> key.matches(value = state) }
         .values
         .flatMap { stateNode -> stateNode.messageMap.entries }

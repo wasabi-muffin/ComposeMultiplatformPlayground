@@ -5,11 +5,12 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Act
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ListenerNode
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.RootNode
 
 class StateMachineStateListener<A : Action, E : Event, S : State>(
-    private val stateMachine: StateMachine<A, E, S>,
+    private val rootNode: RootNode<A, E, S>,
 ) : StateListener<A, S> {
-    private fun getNode(state: S) = stateMachine.stateMap.entries
+    private fun getNode(state: S) = rootNode.stateMap.entries
         .find { stateMatcher -> stateMatcher.key.matches(value = state) }
         ?.value
         ?.stateListenerNode

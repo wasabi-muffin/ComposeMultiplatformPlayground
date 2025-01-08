@@ -1,8 +1,6 @@
-package tech.fika.compose.multiplatform.playground.presentation.core.lifecycle
+package tech.fika.compose.multiplatform.playground.presentation.core.components
 
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
@@ -15,6 +13,8 @@ interface LifecycleListener<A : Action, S : State> : DefaultLifecycleObserver {
     fun onDestroy() = Unit
 
     companion object {
-        fun <A : Action, S : State> default() = object : LifecycleListener<A, S> {}
+        fun <A : Action, S : State> default() = EmptyLifecycleListener<A, S>()
     }
 }
+
+class EmptyLifecycleListener<A : Action, S : State>: LifecycleListener<A, S>

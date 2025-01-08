@@ -23,13 +23,13 @@ fun SetupScreen(
     viewModel: SetupViewModel,
     navigator: SetupNavigator,
 ) {
-    val (state, dispatch) = viewModel.store
-        .handleEvents { event ->
+    val (state, dispatch) = viewModel.store.apply {
+        handleEvents { event ->
             when (event) {
                 SetupEvent.NavigateBack -> navigator.back()
             }
         }
-        .toViewStore()
+    }.toViewStore()
 
     SetupScreenContent(state = state, dispatch = dispatch)
 }

@@ -6,7 +6,6 @@ import org.koin.core.annotation.Single
 import tech.fika.compose.multiplatform.playground.data.DataModule
 import tech.fika.compose.multiplatform.playground.domain.DomainModule
 import tech.fika.compose.multiplatform.playground.play.InitialModule
-import tech.fika.compose.multiplatform.playground.presentation.core.message.DefaultMessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.setup.SetupModule
 
@@ -21,5 +20,5 @@ import tech.fika.compose.multiplatform.playground.setup.SetupModule
 @ComponentScan
 class ApplicationModule {
     @Single
-    internal fun provideMessageManager(): MessageRelay = DefaultMessageRelay()
+    internal fun provideMessageManager(): MessageRelay = MessageRelay.default()
 }

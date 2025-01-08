@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
@@ -30,11 +31,11 @@ fun <A : Action, E : Event, S : State> Store<A, E, S>.toViewStore(): ViewStore<A
 }
 
 @Composable
-inline fun <A : Action, E : Event, S : State> Store<A, E, S>.setLifecycleObserver(): Store<A, E, S> = apply {
+fun <A : Action, E : Event, S : State> Store<A, E, S>.setLifecycleObserver() {
     val lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle
 
     lifecycleObserver?.let { observer ->
-        DisposableEffect(key1 = observer) {
+        DisposableEffect(key1 = lifecycle) {
             lifecycle.addObserver(observer = observer)
             onDispose {
                 lifecycle.removeObserver(observer = observer)
@@ -43,7 +44,7 @@ inline fun <A : Action, E : Event, S : State> Store<A, E, S>.setLifecycleObserve
     }
 }
 
-val <A : Action, E : Event, S : State> Store<A, E, S>.lifecycleObserver
+val <A : Action, E : Event, S : State> Store<A, E, S>.lifecycleObserver: LifecycleObserver?
     get() = lifecycleListener?.let { listener ->
         object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) = listener.onCreate(currentState, ::dispatch)
@@ -56,12 +57,12 @@ val <A : Action, E : Event, S : State> Store<A, E, S>.lifecycleObserver
     }
 
 @Composable
-inline fun <A : Action, E : Event, S : State> Store<A, E, S>.handleEvents(
-    noinline block: CoroutineScope.(E) -> Unit,
-): Store<A, E, S> = apply {
+fun <A : Action, E : Event, S : State> Store<A, E, S>.handleEvents(
+    block: CoroutineScope.(E) -> Unit,
+) {
     val events by event.collectAsState(initial = null)
-    events?.let { event ->
-        LaunchedEffect(event) {
+    LaunchedEffect(events) {
+        events?.let { event ->
             block(event)
             process(event)
         }

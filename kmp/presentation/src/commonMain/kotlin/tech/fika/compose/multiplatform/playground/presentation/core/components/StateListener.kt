@@ -9,6 +9,8 @@ interface StateListener<A : Action, S : State> {
     fun onExit(state: S, dispatch: (A) -> Unit) = Unit
 
     companion object {
-        fun <A : Action, S : State> default() = object : StateListener<A, S> {}
+        fun <A : Action, S : State> default() = EmptyStateListener<A, S>()
     }
 }
+
+class EmptyStateListener<A : Action, S : State> : StateListener<A, S>

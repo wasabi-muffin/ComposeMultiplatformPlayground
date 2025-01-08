@@ -8,24 +8,22 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.comp
 @Factory(binds = [InitialStateMachine::class])
 class InitialStateMachine(
     messageRelay: MessageRelay,
-) : StateMachine<InitialAction, InitialEvent, InitialState>(
-    builder = {
-        config {
-            initialState = InitialState.Initial(text = "")
-            set(messageRelay)
+) : StateMachine<InitialAction, InitialEvent, InitialState>({
+    config {
+        initialState = InitialState.Initial(text = "")
+        set(messageRelay = messageRelay)
+    }
+
+    state<InitialState.Initial> {
+        receive<TestMessage> { dispatch(InitialAction.InputText(message.value)) }
+
+        process<InitialAction.ClickNext> {
+            send(InitialEvent.NavigateSetup(text = state.text))
         }
-
-        state<InitialState.Initial> {
-            receive<TestMessage> { dispatch(InitialAction.InputText(message.value)) }
-
-            process<InitialAction.ClickNext> {
-                send(InitialEvent.NavigateSetup(text = state.text))
-            }
-            process<InitialAction.InputText> {
-                transition {
-                    state.copy(text = action.text)
-                }
+        process<InitialAction.InputText> {
+            transition {
+                state.copy(text = action.text)
             }
         }
     }
-)
+})

@@ -10,22 +10,28 @@ import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 import tech.fika.compose.multiplatform.playground.presentation.core.store.StoreConfiguration
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.builders.StateMachineBuilder
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineLifecycleListener
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineMessageHandler
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineProcessor
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachineStateListener
 
-fun <A : Action, E : Event, S : State> stateMachine(builder: StateMachineBuilder<A, E, S>.() -> Unit) = builder
+fun <A : Action, E : Event, S : State> stateMachineBuilder(
+    builder: StateMachineBuilder<A, E, S>.() -> Unit,
+) = StateMachineBuilder<A, E, S>().apply(builder).build()
 
 fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     initialState: S? = null,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main.immediate),
     storeConfiguration: StoreConfiguration.Builder<A, E, S>.() -> Unit = {},
 ): Store<A, E, S> = DefaultStore(
-    initialState = initialState ?: this.initialState ?: error("Initial State is not set"),
-    processor = processor,
+    initialState = initialState ?: rootNode.configNode.initialState ?: error("Initial State is not set"),
+    processor = StateMachineProcessor(rootNode = rootNode),
     coroutineScope = coroutineScope,
 ) {
-    add(stateListener = stateListener)
-    add(lifecycleListener = lifecycleListener)
-    add(messageHandler = messageHandler)
-    add(messageRelay = messageRelay)
-    add(interceptors = interceptors)
+    add(stateListener = StateMachineStateListener(rootNode = rootNode))
+    add(lifecycleListener = StateMachineLifecycleListener(rootNode = rootNode))
+    add(messageHandler = StateMachineMessageHandler(rootNode = rootNode))
+    add(messageRelay = rootNode.configNode.messageRelay)
+    add(interceptors = rootNode.configNode.interceptors)
     storeConfiguration()
 }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.core.lifecycle.LifecycleListener
+import tech.fika.compose.multiplatform.playground.presentation.core.components.LifecycleListener
 
 interface Store<A : Action, E : Event, S : State> {
     /**

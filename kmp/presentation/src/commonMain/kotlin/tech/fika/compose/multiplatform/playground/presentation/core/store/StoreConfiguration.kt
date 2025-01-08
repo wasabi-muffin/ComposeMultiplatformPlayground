@@ -1,13 +1,12 @@
 package tech.fika.compose.multiplatform.playground.presentation.core.store
 
 import tech.fika.compose.multiplatform.playground.presentation.core.components.Interceptor
+import tech.fika.compose.multiplatform.playground.presentation.core.components.JobHandler
+import tech.fika.compose.multiplatform.playground.presentation.core.components.LifecycleListener
 import tech.fika.compose.multiplatform.playground.presentation.core.components.StateListener
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
-import tech.fika.compose.multiplatform.playground.presentation.core.lifecycle.LifecycleListener
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.DefaultJobHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.JobHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 
@@ -20,7 +19,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
     val interceptors: List<Interceptor<A, E, S>>,
 ) {
     class Builder<A : Action, E : Event, S : State> {
-        private var jobHandler: JobHandler = DefaultJobHandler()
+        private var jobHandler: JobHandler? = null
         private var stateListener: StateListener<A, S>? = null
         private var lifecycleListener: LifecycleListener<A, S>? = null
         private var messageRelay: MessageRelay? = null
@@ -54,7 +53,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
         fun add(interceptors: List<Interceptor<A, E, S>>) = add(*interceptors.toTypedArray())
 
         fun build(): StoreConfiguration<A, E, S> = StoreConfiguration(
-            jobHandler = jobHandler,
+            jobHandler = jobHandler ?: JobHandler.default(),
             stateListener = stateListener,
             lifecycleListener = lifecycleListener,
             messageRelay = messageRelay,

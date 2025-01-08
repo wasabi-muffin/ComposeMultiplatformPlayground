@@ -1,19 +1,18 @@
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.components.Interceptor
+import tech.fika.compose.multiplatform.playground.presentation.core.components.JobHandler
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.DefaultJobHandler
-import tech.fika.compose.multiplatform.playground.presentation.core.tools.JobHandler
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ConfigNode
 
 @ConfigDsl
 class ConfigBuilder<A : Action, E : Event, S : State> {
     var initialState: S? = null
     private var messageRelay: MessageRelay? = null
-    private var jobHandler: JobHandler = DefaultJobHandler()
+    private var jobHandler: JobHandler = JobHandler.default()
     private val interceptors = mutableListOf<Interceptor<A, E, S>>()
 
     fun set(messageRelay: MessageRelay) {

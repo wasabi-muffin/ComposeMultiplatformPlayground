@@ -22,14 +22,14 @@ fun InitialScreen(
     viewModel: InitialViewModel,
     navigator: InitialNavigator,
 ) {
-    val (state, dispatch) = viewModel.store
-        .setLifecycleObserver()
-        .handleEvents {
+    val (state, dispatch) = viewModel.store.apply {
+        setLifecycleObserver()
+        handleEvents {
             when (it) {
                 is InitialEvent.NavigateSetup -> navigator.setup(name = it.text)
             }
         }
-        .toViewStore()
+    }.toViewStore()
 
     InitialScreenContent(state = state, dispatch = dispatch)
 }
