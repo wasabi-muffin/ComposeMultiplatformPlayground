@@ -9,11 +9,11 @@ import kotlin.uuid.Uuid
 
 interface JobHandler : CoroutineScope {
     fun launch(
-        key: String? = null,
+        key: Any? = null,
         value: suspend CoroutineScope.() -> Unit,
     ): Job
 
-    fun cancel(key: String)
+    fun cancel(key: Any)
 
     fun cancelAll()
 
@@ -27,10 +27,10 @@ interface JobHandler : CoroutineScope {
 class DefaultJobHandler(
     override val coroutineContext: CoroutineContext = Dispatchers.Default + Job(),
 ) : JobHandler {
-    private val jobMap: MutableMap<String, Job> = mutableMapOf()
+    private val jobMap: MutableMap<Any, Job> = mutableMapOf()
 
     override fun launch(
-        key: String?,
+        key: Any?,
         value: suspend CoroutineScope.() -> Unit,
     ): Job {
         val id = key ?: Uuid.random().toString()
@@ -40,7 +40,7 @@ class DefaultJobHandler(
         }
     }
 
-    override fun cancel(key: String) {
+    override fun cancel(key: Any) {
         jobMap.remove(key)?.cancel()
     }
 

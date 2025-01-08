@@ -38,10 +38,7 @@ class StateMachineProcessor<A : Action, E : Event, S : State>(
                     rootNode.configNode.messageRelay?.publish(message)
                     Transition.Empty
                 },
-                launch = { key, block ->
-                    rootNode.configNode.jobHandler.launch(key, block)
-                    Transition.Empty
-                },
+                jobHandler = rootNode.configNode.jobHandler,
             )
         )
         ?: Transition.Invalid
