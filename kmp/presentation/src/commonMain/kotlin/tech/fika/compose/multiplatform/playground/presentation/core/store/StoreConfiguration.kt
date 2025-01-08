@@ -26,24 +26,28 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
         private var messageHandler: MessageHandler<A, S>? = null
         private var interceptors: MutableList<Interceptor<A, E, S>> = mutableListOf()
 
-        fun add(stateListener: StateListener<A, S>) {
+        fun set(stateListener: StateListener<A, S>) {
             this.stateListener = stateListener
         }
 
-        fun add(lifecycleListener: LifecycleListener<A, S>) {
+        fun set(lifecycleListener: LifecycleListener<A, S>) {
             this.lifecycleListener = lifecycleListener
         }
 
-        fun add(jobHandler: JobHandler) {
+        fun set(jobHandler: JobHandler) {
             this.jobHandler = jobHandler
         }
 
-        fun add(messageRelay: MessageRelay?) {
+        fun set(messageRelay: MessageRelay?) {
             this.messageRelay = messageRelay
         }
 
-        fun add(messageHandler: MessageHandler<A, S>?) {
+        fun set(messageHandler: MessageHandler<A, S>?) {
             this.messageHandler = messageHandler
+        }
+
+        fun add(interceptor: Interceptor<A, E, S>) {
+            this.interceptors.add(interceptor)
         }
 
         fun add(vararg interceptors: Interceptor<A, E, S>) {

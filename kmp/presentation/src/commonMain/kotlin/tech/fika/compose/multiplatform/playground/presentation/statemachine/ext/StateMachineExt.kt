@@ -28,10 +28,10 @@ fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     processor = StateMachineProcessor(rootNode = rootNode),
     coroutineScope = coroutineScope,
 ) {
-    add(stateListener = StateMachineStateListener(rootNode = rootNode))
-    add(lifecycleListener = StateMachineLifecycleListener(rootNode = rootNode))
-    add(messageHandler = StateMachineMessageHandler(rootNode = rootNode))
-    add(messageRelay = rootNode.configNode.messageRelay)
+    set(stateListener = StateMachineStateListener(rootNode = rootNode))
+    set(lifecycleListener = StateMachineLifecycleListener(rootNode = rootNode))
+    set(messageHandler = StateMachineMessageHandler(rootNode = rootNode))
+    set(messageRelay = rootNode.configNode.messageRelay)
     add(interceptors = rootNode.configNode.interceptors)
     storeConfiguration()
 }

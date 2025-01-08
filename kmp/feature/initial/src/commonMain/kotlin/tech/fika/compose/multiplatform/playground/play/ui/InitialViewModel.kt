@@ -8,7 +8,6 @@ import tech.fika.compose.multiplatform.playground.play.presentation.InitialEvent
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialState
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialStateMachine
 import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
-import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.saveState.SaveStateInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.saveState.getState
 import tech.fika.compose.multiplatform.playground.presentation.saveState.setState
@@ -22,7 +21,6 @@ class InitialViewModel(
     val store: Store<InitialAction, InitialEvent, InitialState> = initialStateMachine.store(
         initialState = savedStateHandle.getState(),
     ) {
-        add(LoggingInterceptor(tag = "Initial"))
         add(SaveStateInterceptor(savedStateHandle::setState))
     }
 }

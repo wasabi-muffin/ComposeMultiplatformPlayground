@@ -5,25 +5,23 @@ import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
 import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
-import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.core.message.Test2Message
 import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
 import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.on
-
-object TestState : State
 
 @Factory(binds = [SetupStateMachine::class])
 class SetupStateMachine(
     getPlatformUseCase: GetPlatformUseCase,
     errorHandler: ErrorHandler,
-    messageRelay: MessageRelay,
+    relay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>({
-    config.initialState = SetupState.Initial("")
-    config.messageRelay = messageRelay
-    config.add(LoggingInterceptor())
+    config {
+        initialState = SetupState.Initial("")
+        messageRelay = relay
+        interceptors.add(LoggingInterceptor(tag = "Setup"))
+    }
 
     lifecycle {
         onResume {
@@ -41,9 +39,7 @@ class SetupStateMachine(
     }
 
     state<SetupState.Initial> {
-        listener {
-            onEnter { dispatch(SetupAction.OnStart) }
-        }
+        listener.onEnter { dispatch(SetupAction.OnStart) }
 
         process<SetupAction.OnStart> {
             transition { SetupState.Loading(name = state.name) }
@@ -51,9 +47,8 @@ class SetupStateMachine(
     }
 
     state<SetupState.Loading> {
-        listener {
-            onEnter { dispatch(SetupAction.LoadPlatform) }
-        }
+        listener.onEnter { dispatch(SetupAction.LoadPlatform) }
+
         process<SetupAction.LoadPlatform> {
             launch {
                 errorHandler(with = getPlatformUseCase) {
