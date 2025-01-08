@@ -9,8 +9,8 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.comp
 class InitialStateMachine(
     messageRelay: MessageRelay,
 ) : StateMachine<InitialAction, InitialEvent, InitialState>({
+    config.initialState = InitialState.Initial(text = "")
     config {
-        initialState = InitialState.Initial(text = "")
         set(messageRelay = messageRelay)
     }
 

@@ -5,11 +5,15 @@ import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
 import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.core.message.Test2Message
 import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
 import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.on
+
+object TestState : State
 
 @Factory(binds = [SetupStateMachine::class])
 class SetupStateMachine(
@@ -17,10 +21,9 @@ class SetupStateMachine(
     errorHandler: ErrorHandler,
     messageRelay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>({
-    config {
-        set(messageRelay)
-        add(interceptor = LoggingInterceptor())
-    }
+    config.initialState = SetupState.Initial("")
+    config.messageRelay = messageRelay
+    config.add(LoggingInterceptor())
 
     lifecycle {
         onResume {

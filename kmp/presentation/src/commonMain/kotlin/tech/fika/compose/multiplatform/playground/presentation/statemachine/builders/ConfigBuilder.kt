@@ -11,9 +11,9 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.node
 @ConfigDsl
 class ConfigBuilder<A : Action, E : Event, S : State> {
     var initialState: S? = null
-    private var messageRelay: MessageRelay? = null
-    private var jobHandler: JobHandler = JobHandler.default()
-    private val interceptors = mutableListOf<Interceptor<A, E, S>>()
+    var messageRelay: MessageRelay? = null
+    var jobHandler: JobHandler = JobHandler.default()
+    val interceptors = mutableListOf<Interceptor<A, E, S>>()
 
     fun set(messageRelay: MessageRelay) {
         this.messageRelay = messageRelay

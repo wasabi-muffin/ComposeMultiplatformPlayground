@@ -6,8 +6,6 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
 import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ActionNode
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ConfigNode
-import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.LifecycleNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.MessageNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.RootNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.StateListenerNode
@@ -16,8 +14,8 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.node
 @StateMachineDsl
 class StateMachineBuilder<A : Action, E : Event, S : State> {
     private val stateMap = LinkedHashMap<Matcher<S, S>, StateNode<A, E, S>>()
-    private var configNode: ConfigNode<A, E, S> = ConfigNode()
-    private var lifecycleNode: LifecycleNode<A, S> = LifecycleNode()
+    val lifecycle: LifecycleBuilder<A, S> = LifecycleBuilder()
+    val config: ConfigBuilder<A, E, S> = ConfigBuilder()
 
     fun <S1 : S> state(
         stateMatcher: Matcher<S, S1>,
@@ -31,17 +29,17 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
     ) = state(Matcher.any(), builder)
 
     fun lifecycle(builder: @StateMachineDsl LifecycleBuilder<A, S>.() -> Unit) {
-        lifecycleNode = LifecycleBuilder<A, S>().apply(builder).build()
+        lifecycle.apply(builder)
     }
 
     fun config(builder: @StateMachineDsl ConfigBuilder<A, E, S>.() -> Unit) {
-        configNode = ConfigBuilder<A, E, S>().apply(builder).build()
+        config.apply(builder)
     }
 
     internal fun build(): RootNode<A, E, S> = RootNode(
         stateMap = stateMap.toList().reversed().toMap(),
-        lifecycleNode = lifecycleNode,
-        configNode = configNode,
+        lifecycleNode = lifecycle.build(),
+        configNode = config.build(),
     )
 
     @Suppress("UNCHECKED_CAST")
@@ -49,10 +47,10 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
     inner class StateBuilder<S1 : S> {
         private val actionMap = mutableMapOf<Matcher<A, A>, (ActionNode<A, E, S, A, S>) -> Transition<A, S, S>>()
         private val messageMap = mutableMapOf<Matcher<Message, Message>, (MessageNode<A, S, Message>) -> Unit>()
-        private var stateListenerNode: StateListenerNode<A, S> = StateListenerNode()
+        val listener: StateListenerBuilder<A, S1> = StateListenerBuilder()
 
         fun listener(builder: @StateDsl StateListenerBuilder<A, S1>.() -> Unit) {
-            stateListenerNode = StateListenerBuilder<A, S1>().apply(builder).build() as StateListenerNode<A, S>
+            listener.apply(builder)
         }
 
         fun <A1 : A> process(
@@ -99,7 +97,7 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
         internal fun build(): StateNode<A, E, S> = StateNode(
             actionMap = actionMap,
             messageMap = messageMap,
-            stateListenerNode = stateListenerNode
+            stateListenerNode = listener.build() as StateListenerNode<A, S>
         )
     }
 }

@@ -20,7 +20,7 @@ class InitialViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val store: Store<InitialAction, InitialEvent, InitialState> = initialStateMachine.store(
-        initialState = savedStateHandle.getState() ?: InitialState.Initial(text = ""),
+        initialState = savedStateHandle.getState(),
     ) {
         add(LoggingInterceptor(tag = "Initial"))
         add(SaveStateInterceptor(savedStateHandle::setState))

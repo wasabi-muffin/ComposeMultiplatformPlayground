@@ -35,3 +35,9 @@ fun <A : Action, E : Event, S : State> StateMachine<A, E, S>.store(
     add(interceptors = rootNode.configNode.interceptors)
     storeConfiguration()
 }
+
+inline fun <reified S : State> State.on(block: S.() -> Unit) {
+    if (this is S) {
+        block(this)
+    }
+}
