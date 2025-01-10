@@ -34,6 +34,7 @@ class DefaultStore<A : Action, E : Event, S : State>(
 
     init {
         configuration.stateListener?.onEnter(state = initialState, dispatch = ::dispatch)
+        configuration.interceptors.forEach { it.interceptState(initialState) }
         configuration.messageRelay?.subscribe { message ->
             configuration.messageHandler?.handle(
                 message = message,
@@ -55,6 +56,7 @@ class DefaultStore<A : Action, E : Event, S : State>(
                     send = ::send,
                     dispatch = ::dispatch
                 )
+                configuration.interceptors.forEach { it.interceptTransition(transition) }
                 val nextState = if (transition is Valid<A, S, S>) {
                     configuration.stateListener?.observe(transition = transition)
                     transition.nextState

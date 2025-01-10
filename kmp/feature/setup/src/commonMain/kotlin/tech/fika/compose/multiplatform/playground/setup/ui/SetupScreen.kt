@@ -13,6 +13,7 @@ import composemultiplatformplayground.kmp.feature.setup.generated.resources.Res
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.setLifecycleObserver
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.toViewStore
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupAction
 import tech.fika.compose.multiplatform.playground.setup.presentation.SetupEvent
@@ -24,6 +25,7 @@ fun SetupScreen(
     navigator: SetupNavigator,
 ) {
     val (state, dispatch) = viewModel.store.apply {
+        setLifecycleObserver()
         handleEvents { event ->
             when (event) {
                 SetupEvent.NavigateBack -> navigator.back()

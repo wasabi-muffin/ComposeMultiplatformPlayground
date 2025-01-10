@@ -1,10 +1,11 @@
 package tech.fika.compose.multiplatform.playground.setup.presentation
 
 import org.koin.core.annotation.Factory
-import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandler
+import tech.fika.compose.multiplatform.playground.domain.core.ErrorHandlerScope
 import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
@@ -12,8 +13,8 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.comp
 @Factory(binds = [SetupStateMachine::class])
 class SetupStateMachine(
     getPlatformUseCase: GetPlatformUseCase,
-    errorHandler: ErrorHandler,
-    val relay: MessageRelay,
+    errorHandler: ErrorHandlerScope,
+    relay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>({
     config {
         initialState = SetupState.Initial("")
@@ -49,13 +50,7 @@ class SetupStateMachine(
 
         process<SetupAction.LoadPlatform> {
             launch {
-                errorHandler(with = getPlatformUseCase) {
-                    it.execute()
-                }.onSuccess {
-                    dispatch(SetupAction.LoadPlatformSuccess(it))
-                }.onFailure {
-                    dispatch(SetupAction.LoadPlatformError(it))
-                }
+                loadPlatform(getPlatformUseCase = getPlatformUseCase, errorHandler = errorHandler, dispatch = dispatch)
             }
         }
         process<SetupAction.LoadPlatformSuccess> {
@@ -71,5 +66,21 @@ class SetupStateMachine(
                 state.copy(isShowContent = !state.isShowContent)
             }
         }
+        process<SetupAction.LoadPlatform> {
+            transition { SetupState.Loading(state.name) }
+        }
     }
 })
+
+suspend fun loadPlatform(
+    getPlatformUseCase: GetPlatformUseCase,
+    errorHandler: ErrorHandlerScope,
+    dispatch: (SetupAction) -> Transition.Empty,
+) = errorHandler(with = getPlatformUseCase) {
+    it.execute()
+}.onSuccess {
+    dispatch(SetupAction.LoadPlatformSuccess(it))
+}.onFailure {
+    dispatch(SetupAction.LoadPlatformError(it))
+}
+
