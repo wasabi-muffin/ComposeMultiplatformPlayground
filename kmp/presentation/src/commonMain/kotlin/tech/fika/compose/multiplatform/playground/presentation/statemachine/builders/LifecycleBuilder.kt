@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action

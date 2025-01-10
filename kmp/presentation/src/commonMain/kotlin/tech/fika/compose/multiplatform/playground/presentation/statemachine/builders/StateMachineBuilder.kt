@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "UNCHECKED_CAST", "unused")
+
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
@@ -42,7 +44,6 @@ class StateMachineBuilder<A : Action, E : Event, S : State> {
         configNode = config.build(),
     )
 
-    @Suppress("UNCHECKED_CAST")
     @StateDsl
     inner class StateBuilder<S1 : S> {
         private val actionMap = mutableMapOf<Matcher<A, A>, (ActionNode<A, E, S, A, S>) -> Transition<A, S, S>>()
