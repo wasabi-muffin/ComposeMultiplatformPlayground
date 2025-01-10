@@ -24,7 +24,8 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.kmp.domain)
             implementation(projects.kmp.presentation)
-            implementation(projects.kmp.data)
+            implementation(projects.kmp.local)
+            implementation(projects.kmp.remote)
             implementation(projects.kmp.feature.initial)
             implementation(projects.kmp.feature.setup)
             implementation(libs.compose.navigation)

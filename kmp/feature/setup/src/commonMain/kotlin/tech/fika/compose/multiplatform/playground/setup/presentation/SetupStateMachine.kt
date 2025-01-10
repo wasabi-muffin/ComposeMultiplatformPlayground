@@ -6,8 +6,6 @@ import tech.fika.compose.multiplatform.playground.domain.core.invoke
 import tech.fika.compose.multiplatform.playground.domain.entities.Greeting
 import tech.fika.compose.multiplatform.playground.domain.usecases.GetPlatformUseCase
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
-import tech.fika.compose.multiplatform.playground.presentation.core.message.Test2Message
-import tech.fika.compose.multiplatform.playground.presentation.core.message.TestMessage
 import tech.fika.compose.multiplatform.playground.presentation.logging.LoggingInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.components.StateMachine
 
@@ -15,7 +13,7 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.comp
 class SetupStateMachine(
     getPlatformUseCase: GetPlatformUseCase,
     errorHandler: ErrorHandler,
-    relay: MessageRelay,
+    val relay: MessageRelay,
 ) : StateMachine<SetupAction, SetupEvent, SetupState>({
     config {
         initialState = SetupState.Initial("")
@@ -69,8 +67,6 @@ class SetupStateMachine(
 
     state<SetupState.Stable> {
         process<SetupAction.ClickMe> {
-            publish(TestMessage("Test"))
-            publish(Test2Message)
             transition {
                 state.copy(isShowContent = !state.isShowContent)
             }

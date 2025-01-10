@@ -17,6 +17,7 @@ class SetupViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val route: SetupRoute = savedStateHandle.toRoute()
+
     val store = setupStateMachine.store(
         initialState = savedStateHandle.getState() ?: SetupState.Initial(name = route.name),
     ) {
