@@ -1,7 +1,7 @@
 package tech.fika.compose.multiplatform.playground.presentation.logging
 
-import co.touchlab.kermit.Logger.Companion as Kermit
 import co.touchlab.kermit.Severity
+import co.touchlab.kermit.Logger.Companion as Kermit
 
 class DefaultLogger : Logger {
     override fun log(level: Logger.Level, tag: String, message: () -> String) {

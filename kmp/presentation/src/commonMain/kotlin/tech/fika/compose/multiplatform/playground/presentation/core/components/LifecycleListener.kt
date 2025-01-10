@@ -13,8 +13,9 @@ interface LifecycleListener<A : Action, S : State> : DefaultLifecycleObserver {
     fun onDestroy() = Unit
 
     companion object {
+        @Suppress("unused")
         fun <A : Action, S : State> default() = EmptyLifecycleListener<A, S>()
     }
 }
 
-class EmptyLifecycleListener<A : Action, S : State>: LifecycleListener<A, S>
+class EmptyLifecycleListener<A : Action, S : State> : LifecycleListener<A, S>

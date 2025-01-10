@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
@@ -7,6 +5,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.LifecycleNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ListenerNode
 
+@Suppress("unused")
 @LifecycleDsl
 class LifecycleBuilder<A : Action, S : State> {
     private var onCreate: ListenerNode<A, S>.() -> Unit = {}

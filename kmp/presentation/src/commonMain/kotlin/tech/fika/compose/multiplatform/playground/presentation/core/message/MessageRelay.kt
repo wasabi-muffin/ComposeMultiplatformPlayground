@@ -9,6 +9,7 @@ import kotlin.coroutines.CoroutineContext
 
 interface MessageRelay : MessagePublisher, MessageSubscriber {
     companion object {
+        @Suppress("unused")
         fun default() = DefaultMessageRelay()
     }
 }

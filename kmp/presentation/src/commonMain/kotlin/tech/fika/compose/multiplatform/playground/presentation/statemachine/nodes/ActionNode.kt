@@ -8,6 +8,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Transition
 import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 
+@Suppress("unused")
 data class ActionNode<A : Action, E : Event, S : State, A1 : A, S1 : S>(
     val action: A1,
     val state: S1,
@@ -17,12 +18,14 @@ data class ActionNode<A : Action, E : Event, S : State, A1 : A, S1 : S>(
     val jobHandler: JobHandler,
 ) {
     fun emptyTransition() = Transition.Empty
+
     fun invalidTransition() = Transition.Invalid
+
     fun <S2 : S> transition(nextState: S1.() -> S2): Transition.Valid<A, S1, S2> =
         Transition.Valid(action = action, currentState = state, nextState = state.nextState())
 
     fun launch(key: Any? = null, block: suspend CoroutineScope.() -> Unit): Transition.Empty {
-        jobHandler.launch(key = key, value = block)
+        jobHandler.launch(key = key, block = block)
         return Transition.Empty
     }
 }

@@ -11,4 +11,3 @@ open class StateMachine<A : Action, E : Event, S : State>(
 ) {
     internal val rootNode: RootNode<A, E, S> = StateMachineBuilder<A, E, S>().apply(builder).build()
 }
-

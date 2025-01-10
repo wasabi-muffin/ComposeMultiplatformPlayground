@@ -23,6 +23,10 @@ data class ViewStore<A : Action, S : State>(
     val dispatch: (A) -> Unit = {},
 )
 
+inline fun <reified S : State> State.render(block: S.() -> Unit) {
+    if (this is S) block()
+}
+
 @Composable
 fun <A : Action, E : Event, S : State> Store<A, E, S>.toViewStore(): ViewStore<A, S> {
     val state by state.collectAsState()

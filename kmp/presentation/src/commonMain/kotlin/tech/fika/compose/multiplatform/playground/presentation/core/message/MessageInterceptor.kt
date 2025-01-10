@@ -5,6 +5,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Act
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
+@Suppress("unused")
 class MessageInterceptor<A : Action, E : Event, S : State>(
     private val messagePublisher: MessagePublisher,
     private val publish: (A) -> Message?,

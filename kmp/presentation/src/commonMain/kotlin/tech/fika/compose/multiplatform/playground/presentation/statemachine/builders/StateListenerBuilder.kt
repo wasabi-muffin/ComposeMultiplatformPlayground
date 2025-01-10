@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
@@ -7,6 +5,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ListenerNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.StateListenerNode
 
+@Suppress("unused")
 @StateListenerDsl
 class StateListenerBuilder<A : Action, S : State> {
     private var onEnter: (ListenerNode<A, S>) -> Unit = {}

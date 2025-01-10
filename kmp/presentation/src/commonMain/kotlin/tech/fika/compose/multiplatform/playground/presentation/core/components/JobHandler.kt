@@ -3,15 +3,12 @@ package tech.fika.compose.multiplatform.playground.presentation.core.components
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.launch as coroutinesLaunch
 
 interface JobHandler : CoroutineScope {
-    fun launch(
-        key: Any? = null,
-        value: suspend CoroutineScope.() -> Unit,
-    ): Job
+    fun launch(key: Any? = null, block: suspend CoroutineScope.() -> Unit): Job
 
     fun cancel(key: Any)
 
@@ -29,13 +26,10 @@ class DefaultJobHandler(
 ) : JobHandler {
     private val jobMap: MutableMap<Any, Job> = mutableMapOf()
 
-    override fun launch(
-        key: Any?,
-        value: suspend CoroutineScope.() -> Unit,
-    ): Job {
+    override fun launch(key: Any?, block: suspend CoroutineScope.() -> Unit): Job {
         val id = key ?: Uuid.random().toString()
         cancel(id)
-        return launch(block = value).apply {
+        return coroutinesLaunch(block = block).apply {
             jobMap[id] = this
         }
     }
@@ -44,5 +38,7 @@ class DefaultJobHandler(
         jobMap.remove(key)?.cancel()
     }
 
-    override fun cancelAll() = jobMap.keys.forEach(::cancel)
+    override fun cancelAll() {
+        jobMap.keys.forEach(::cancel)
+    }
 }

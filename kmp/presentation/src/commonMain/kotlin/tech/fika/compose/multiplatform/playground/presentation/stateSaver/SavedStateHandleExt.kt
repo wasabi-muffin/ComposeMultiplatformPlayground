@@ -1,10 +1,11 @@
-package tech.fika.compose.multiplatform.playground.presentation.saveState
+package tech.fika.compose.multiplatform.playground.presentation.stateSaver
 
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 
+@Suppress("UnusedReceiverParameter")
 val SavedStateHandle.STATE_KEY: String
     get() = "STATE_KEY"
 

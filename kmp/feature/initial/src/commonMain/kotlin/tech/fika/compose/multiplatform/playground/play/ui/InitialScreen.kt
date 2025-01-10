@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialAction
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialEvent
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialState
+import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
+import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.render
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.setLifecycleObserver
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.toViewStore
 
@@ -34,19 +36,23 @@ fun InitialScreen(
     InitialScreenContent(state = state, dispatch = dispatch)
 }
 
+object OtherState : State
+
 @Composable
 private fun InitialScreenContent(
     state: InitialState,
     dispatch: (InitialAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        TextField(
-            value = state.text,
-            onValueChange = { dispatch(InitialAction.InputText(text = it)) },
-            modifier = Modifier.fillMaxWidth().padding(24.dp)
-        )
-        Button(onClick = { dispatch(InitialAction.ClickNext) }) {
-            Text("Next!")
+    state.render<InitialState.Initial> {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(
+                value = text,
+                onValueChange = { dispatch(InitialAction.InputText(text = it)) },
+                modifier = Modifier.fillMaxWidth().padding(24.dp)
+            )
+            Button(onClick = { dispatch(InitialAction.ClickNext) }) {
+                Text("Next!")
+            }
         }
     }
 }

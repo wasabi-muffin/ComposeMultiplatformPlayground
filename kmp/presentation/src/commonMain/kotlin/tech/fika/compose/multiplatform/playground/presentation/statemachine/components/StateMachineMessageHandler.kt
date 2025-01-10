@@ -2,8 +2,8 @@ package tech.fika.compose.multiplatform.playground.presentation.statemachine.com
 
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
-import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
+import tech.fika.compose.multiplatform.playground.presentation.core.message.Message
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageHandler
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.MessageNode
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.RootNode

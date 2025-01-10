@@ -33,21 +33,16 @@ class LoggingInterceptor<A : Action, E : Event, S : State>(
     override fun interceptMessage(message: Message) {
         logger.log(level = level, tag = tag, prefix = "Message", value = message)
     }
-}
 
-private fun Logger.log(
-    prefix: String,
-    value: Any,
-    level: Level,
-    tag: String,
-    length: Int = 500,
-    padding: Int = 12,
-) = value.toString().chunked(size = length).forEachIndexed { index, line ->
-    log(level = level, tag = tag) {
-        if (index == 0) {
-            "${"[$prefix]".padEnd(padding)} $line"
-        } else {
-            "${" ".repeat(padding)} $line"
+    private fun Logger.log(prefix: String, value: Any, level: Level, tag: String, length: Int = 500, padding: Int = 12) {
+        return value.toString().chunked(size = length).forEachIndexed { index, line ->
+            log(level = level, tag = tag) {
+                if (index == 0) {
+                    "${"[$prefix]".padEnd(padding)} $line"
+                } else {
+                    "${" ".repeat(padding)} $line"
+                }
+            }
         }
     }
 }

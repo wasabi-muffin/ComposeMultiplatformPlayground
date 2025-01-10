@@ -1,5 +1,3 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
-
 package tech.fika.compose.multiplatform.playground.presentation.statemachine.builders
 
 import tech.fika.compose.multiplatform.playground.presentation.core.components.Interceptor
@@ -10,6 +8,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.contract.Sta
 import tech.fika.compose.multiplatform.playground.presentation.core.message.MessageRelay
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.nodes.ConfigNode
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 @ConfigDsl
 class ConfigBuilder<A : Action, E : Event, S : State> {
     var initialState: S? = null

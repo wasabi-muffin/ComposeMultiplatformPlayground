@@ -9,7 +9,7 @@ import tech.fika.compose.multiplatform.playground.presentation.core.message.Mess
 interface Interceptor<A : Action, E : Event, S : State> {
     fun interceptAction(action: A) = Unit
     fun interceptEvent(event: E) = Unit
-    fun interceptState(state: S) = Unit
     fun interceptTransition(transition: Transition<A, S, S>) = Unit
+    fun interceptState(state: S) = Unit
     fun interceptMessage(message: Message) = Unit
 }

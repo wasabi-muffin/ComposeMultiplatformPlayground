@@ -9,6 +9,7 @@ interface StateListener<A : Action, S : State> {
     fun onExit(state: S, dispatch: (A) -> Unit) = Unit
 
     companion object {
+        @Suppress("unused")
         fun <A : Action, S : State> default() = EmptyStateListener<A, S>()
     }
 }
