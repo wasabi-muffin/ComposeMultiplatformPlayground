@@ -10,6 +10,7 @@ kotlin {
                 implementation(projects.kmp.domain)
                 implementation(projects.kmp.app)
                 implementation(libs.koin.core)
+                implementation(libs.log.kermit)
             }
         }
     }

@@ -1,4 +1,4 @@
-package tech.fika.compose.multiplatform.playground
+package tech.fika.compose.multiplatform.playground.navigation
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable

@@ -77,7 +77,7 @@ suspend fun loadPlatform(
     errorHandler: ErrorHandlerScope,
     dispatch: (SetupAction) -> Transition.Empty,
 ) = errorHandler(with = getPlatformUseCase) {
-    it.execute()
+    it()
 }.onSuccess {
     dispatch(SetupAction.LoadPlatformSuccess(it))
 }.onFailure {

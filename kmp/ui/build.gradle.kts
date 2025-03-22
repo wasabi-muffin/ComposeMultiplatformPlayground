@@ -14,12 +14,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.kmp.domain)
             implementation(projects.kmp.presentation)
-            implementation(projects.kmp.ui)
             implementation(libs.kotlinx.coroutines.core)
         }
     }
 }
 
 android {
-    namespace = "tech.fika.compose.multiplatform.playground.feature.setup"
+    namespace = "tech.fika.compose.multiplatform.playground.ui"
 }

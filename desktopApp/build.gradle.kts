@@ -10,6 +10,8 @@ dependencies {
     implementation(projects.kmp.domain)
     implementation(projects.kmp.app)
     implementation(libs.koin.core)
+    implementation(libs.decompose.core)
+    implementation(libs.decompose.compose)
 }
 
 compose {

@@ -14,6 +14,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.kmp.domain)
             implementation(projects.kmp.presentation)
+            implementation(projects.kmp.ui)
             implementation(libs.kotlinx.coroutines.core)
         }
     }

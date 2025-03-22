@@ -3,31 +3,25 @@ package tech.fika.compose.multiplatform.playground
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import org.koin.android.ext.koin.androidContext
-import org.koin.compose.KoinApplication
-import org.koin.ksp.generated.module
+import androidx.compose.material.MaterialTheme
+import com.arkivanov.decompose.defaultComponentContext
+import tech.fika.compose.multiplatform.playground.decompose.DefaultRootComponent
+import tech.fika.compose.multiplatform.playground.decompose.App
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+       enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+
+        val root = DefaultRootComponent(
+            componentContext = defaultComponentContext(),
+        )
+
         setContent {
-            KoinApplication(
-                application = {
-                    androidContext(applicationContext)
-                    modules(ApplicationModule().module)
-                }
-            ) {
-                App()
+            MaterialTheme {
+                App(component = root)
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }

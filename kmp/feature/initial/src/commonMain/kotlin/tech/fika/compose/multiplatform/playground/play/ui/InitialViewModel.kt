@@ -23,4 +23,9 @@ class InitialViewModel(
     ) {
         add(StateSaverInterceptor(savedStateHandle::setState))
     }
+
+    override fun onCleared() {
+        store.dispose()
+        super.onCleared()
+    }
 }

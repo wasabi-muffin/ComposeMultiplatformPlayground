@@ -1,11 +1,10 @@
 package tech.fika.compose.multiplatform.playground.navigation
 
 import androidx.navigation.NavController
-import tech.fika.compose.multiplatform.playground.play.ui.InitialNavigator
-import tech.fika.compose.multiplatform.playground.setup.ui.SetupRoute
+import tech.fika.compose.multiplatform.playground.play.ui.InitialRouter
 
-internal fun NavController.initialNavigator(): InitialNavigator = object : InitialNavigator {
+internal fun NavController.initialRouter(): InitialRouter = object : InitialRouter {
     override fun setup(name: String) {
-        navigate(route = SetupRoute(name = name))
+        navigate(route = Route.Setup(name = name))
     }
 }

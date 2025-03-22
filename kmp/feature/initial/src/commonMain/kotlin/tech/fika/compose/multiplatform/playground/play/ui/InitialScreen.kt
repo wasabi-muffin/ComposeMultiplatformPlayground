@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retryWhen
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialAction
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialEvent
 import tech.fika.compose.multiplatform.playground.play.presentation.InitialState
-import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
+import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.render
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.setLifecycleObserver
@@ -22,21 +24,27 @@ import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.
 @Composable
 fun InitialScreen(
     viewModel: InitialViewModel,
-    navigator: InitialNavigator,
+    router: InitialRouter,
 ) {
-    val (state, dispatch) = viewModel.store.apply {
-        setLifecycleObserver()
+    InitialScreen(store = viewModel.store, router = router)
+}
+
+@Composable
+fun InitialScreen(
+    store: Store<InitialAction, InitialEvent, InitialState>,
+    router: InitialRouter,
+) {
+    val (state, dispatch) = store.apply {
+//        setLifecycleObserver()
         handleEvents {
             when (it) {
-                is InitialEvent.NavigateSetup -> navigator.setup(name = it.text)
+                is InitialEvent.NavigateSetup -> router.setup(name = it.text)
             }
         }
     }.toViewStore()
 
     InitialScreenContent(state = state, dispatch = dispatch)
 }
-
-object OtherState : State
 
 @Composable
 private fun InitialScreenContent(

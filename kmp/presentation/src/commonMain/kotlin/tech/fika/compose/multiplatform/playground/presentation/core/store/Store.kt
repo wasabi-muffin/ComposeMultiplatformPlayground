@@ -3,6 +3,7 @@ package tech.fika.compose.multiplatform.playground.presentation.core.store
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import tech.fika.compose.multiplatform.playground.presentation.core.components.Interceptor
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Action
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.Event
 import tech.fika.compose.multiplatform.playground.presentation.core.contract.State
@@ -40,6 +41,8 @@ interface Store<A : Action, E : Event, S : State> {
      * Cancels all jobs within the store
      */
     fun dispose()
+
+    fun add(interceptor: Interceptor<A, E, S>)
 
     /**
      * Collect used for Kotlin Native

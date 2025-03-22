@@ -18,7 +18,7 @@ data class StoreConfiguration<A : Action, E : Event, S : State>(
     val messageHandler: MessageHandler<A, S>?,
     val interceptors: List<Interceptor<A, E, S>>,
 ) {
-    class Builder<A : Action, E : Event, S : State> {
+    class Builder<A : Action, E : Event, S : State>(val dispatch: (A) -> Unit = {}) {
         private var jobHandler: JobHandler? = null
         private var stateListener: StateListener<A, S>? = null
         private var lifecycleListener: LifecycleListener<A, S>? = null

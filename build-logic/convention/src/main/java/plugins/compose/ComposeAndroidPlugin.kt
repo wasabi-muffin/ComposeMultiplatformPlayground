@@ -20,6 +20,7 @@ class ComposeAndroidPlugin : Plugin<Project> {
             implementation(libs.library("koin-compose"))
             implementation(libs.library("compose-lifecycle-runtime"))
             implementation(libs.library("androidx-activity-compose"))
+            implementation(libs.library("decompose-core"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)

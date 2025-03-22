@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.Res
 import composemultiplatformplayground.kmp.feature.setup.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
+import tech.fika.compose.multiplatform.playground.presentation.core.store.Store
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.handleEvents
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.setLifecycleObserver
 import tech.fika.compose.multiplatform.playground.presentation.statemachine.ext.toViewStore
@@ -22,13 +23,21 @@ import tech.fika.compose.multiplatform.playground.setup.presentation.SetupState
 @Composable
 fun SetupScreen(
     viewModel: SetupViewModel,
-    navigator: SetupNavigator,
+    router: SetupRouter,
 ) {
-    val (state, dispatch) = viewModel.store.apply {
-        setLifecycleObserver()
+    SetupScreen(store = viewModel.store, router = router)
+}
+
+@Composable
+internal fun SetupScreen(
+    store: Store<SetupAction, SetupEvent, SetupState>,
+    router: SetupRouter,
+) {
+    val (state, dispatch) = store.apply {
+       setLifecycleObserver()
         handleEvents { event ->
             when (event) {
-                SetupEvent.NavigateBack -> navigator.back()
+                SetupEvent.NavigateBack -> router.back()
             }
         }
     }.toViewStore()

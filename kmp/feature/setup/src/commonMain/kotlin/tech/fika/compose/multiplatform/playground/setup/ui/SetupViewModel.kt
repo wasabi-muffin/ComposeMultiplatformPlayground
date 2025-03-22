@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import org.koin.android.annotation.KoinViewModel
+import tech.fika.compose.multiplatform.playground.navigation.Route
 import tech.fika.compose.multiplatform.playground.presentation.stateSaver.StateSaverInterceptor
 import tech.fika.compose.multiplatform.playground.presentation.stateSaver.getState
 import tech.fika.compose.multiplatform.playground.presentation.stateSaver.setState
@@ -16,7 +17,7 @@ class SetupViewModel(
     setupStateMachine: SetupStateMachine,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val route: SetupRoute = savedStateHandle.toRoute()
+    private val route: Route.Setup = savedStateHandle.toRoute()
 
     val store = setupStateMachine.store(
         initialState = savedStateHandle.getState() ?: SetupState.Initial(name = route.name),

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.build.kmp.desktop)
     alias(libs.plugins.build.koin.kmp)
     alias(libs.plugins.build.compose.kmp)
+    alias(libs.plugins.build.tools.serialization)
 }
 
 kotlin {
@@ -26,9 +27,11 @@ kotlin {
             implementation(projects.kmp.presentation)
             implementation(projects.kmp.local)
             implementation(projects.kmp.remote)
+            implementation(projects.kmp.ui)
             implementation(projects.kmp.feature.initial)
             implementation(projects.kmp.feature.setup)
             implementation(libs.compose.navigation)
+            implementation(libs.log.kermit)
         }
         androidMain.dependencies {
             implementation(compose.preview)

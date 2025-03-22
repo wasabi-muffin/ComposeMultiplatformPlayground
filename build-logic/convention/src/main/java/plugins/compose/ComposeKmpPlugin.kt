@@ -23,6 +23,8 @@ class ComposeKmpPlugin : Plugin<Project> {
                     implementation(libs.library("koin-compose-viewmodel-navigation"))
                     implementation(libs.library("compose-lifecycle-runtime"))
                     implementation(libs.library("compose-lifecycle-viewmodel"))
+                    implementation(libs.library("decompose-core"))
+                    implementation(libs.library("decompose-compose"))
                     implementation(compose.runtime)
                     implementation(compose.foundation)
                     implementation(compose.material)

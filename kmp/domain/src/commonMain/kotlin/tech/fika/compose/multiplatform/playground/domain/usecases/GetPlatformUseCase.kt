@@ -7,7 +7,7 @@ import tech.fika.compose.multiplatform.playground.domain.services.PlatformLocalS
 import tech.fika.compose.multiplatform.playground.domain.services.TestLocalService
 
 fun interface GetPlatformUseCase {
-    suspend fun ErrorHandlerScope.execute(): Platform
+    suspend operator fun ErrorHandlerScope.invoke(): Platform
 }
 
 @Single
@@ -15,7 +15,7 @@ internal class DefaultGetPlatformUseCase(
     private val platformLocalService: PlatformLocalService,
     private val testLocalService: TestLocalService,
 ) : GetPlatformUseCase {
-    override suspend fun ErrorHandlerScope.execute(): Platform {
+    override suspend operator fun ErrorHandlerScope.invoke(): Platform {
         return if (testLocalService.getIsFirstLogin()) {
             testLocalService.setIsFirstLogin()
             Platform("First Login")
